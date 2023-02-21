@@ -31,6 +31,45 @@ def extract_date(df, date_column_name):
     
     return df
 
+def list_categorical_columns(df):
+    '''
+    Function that returns a list with the names of the categorical columns of a dataframe.
+
+    Parameters
+    ----------
+    df : dataframe
+    
+    Return
+    ----------
+        features: list of names
+
+    '''
+    features = []
+
+    for c in df.columns:
+        t = str(df[c].dtype)
+        if "object"  in t:
+            features.append(c)
+    return features
+
+
+
+def uniq_value(list_values:list):
+    '''
+    Function returning the unique values from a list.
+    Parameters
+    ----------
+    list_values:list
+    Return
+    ----------
+    unique: list of unique values
+    '''
+    unique = []
+    for i in list_values:
+        if i not in unique:
+            unique.extend(list_values)
+    return unique
+
 
 def log_transform_data(df: pd.DataFrame, col_ignore: List[str]) -> pd.DataFrame:
     '''
