@@ -3,6 +3,14 @@ from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
 import numpy as np
 from typing import List, Union
+from selenium.webdriver.common.by import By
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import os
+import time
+import io
+from PIL import Image
 
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
     """
@@ -193,3 +201,97 @@ def load_model_zip(zip_file, model_file):
             model = pickle.load(file)
 
     return model
+
+def image_scrap(url, n:int):
+	'''
+	Function to scrap chrome images and get n images we want, and it create a new folder as 'my_images'.
+
+	As we know, we are using selenium, we will need a driver in Chrome.
+	Must have driver from Chrome to run it [chrome](https://chromedriver.chromium.org/), file name = 'chromedriver' and dowload in the same path as the scrip or jupyter. 
+
+	Parameters
+	----------
+	url -> chrome images web link, must be all way long.
+
+	n -> number of images you want to have in the folder. Must be 'int'
+	
+	Return
+	----------
+
+	Folder called 'my_images' with n images, where you can show as much time as you want
+	
+	'''
+	current_dir = os.getcwd()
+	driver_path = os.path.join(current_dir, "chromedriver.exe")
+
+	wd = webdriver.Chrome(driver_path)
+
+	def get_images_from_google(url, wd, delay, max_images):
+		def scroll_down(wd):
+			wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+			time.sleep(delay)
+
+		url = url
+		wd.get(url)
+
+		loadMore = wd.find_element(By.XPATH, '/html/body/c-wiz/div/div/div/div[2]/div/div[3]/div/div/form/div/div/button').click()
+
+		image_urls = set()
+		skips = 0
+
+		while len(image_urls) + skips < max_images:
+			scroll_down(wd)
+
+			thumbnails = wd.find_elements(By.CLASS_NAME, "Q4LuWd")
+
+			for img in thumbnails[len(image_urls) + skips:max_images]:
+				try:
+					img.click()
+					time.sleep(delay)
+				except:
+					continue
+
+				images = wd.find_elements(By.CLASS_NAME, "n3VNCb")
+				for image in images:
+					if image.get_attribute('src') in image_urls:
+						max_images += 1
+						skips += 1
+						break
+
+					if image.get_attribute('src') and 'http' in image.get_attribute('src'):
+						image_urls.add(image.get_attribute('src'))
+						print(f"Found {len(image_urls)}")
+
+		return image_urls
+
+
+	def download_image(download_path, url, file_name):
+		try:
+			image_content = requests.get(url).content
+			image_file = io.BytesIO(image_content)
+			image = Image.open(image_file)
+			file_path = download_path + file_name
+
+			with open(file_path, "wb") as f:
+				image.save(f, "JPEG")
+
+			print("Success")
+		except Exception as e:
+			print('FAILED -', e)
+
+
+	urls = get_images_from_google(url,wd, 1, n)
+	
+	
+	current_dir = os.path.dirname(os.path.abspath(__file__))
+
+	download_dir = os.path.join(current_dir, "my_images")
+	
+
+	if not os.path.exists(download_dir):
+		os.makedirs(download_dir)
+
+	for i, url in enumerate(urls):
+			download_image(download_dir, url, str(i) + ".jpg")
+
+	wd.quit()

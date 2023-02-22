@@ -298,3 +298,33 @@ def load_imgs(path, im_size:int):
     y_train = np.array(y)
     
     return df, X_train, y_train
+
+def convert_to_numeric(df,column:str):
+    '''
+    This function convert any number string in that column, to int or float ignoring any NaN value.
+
+    df -> dataframe we are working with
+
+    column -> column which we want to convert to numeric. Must be 'str'
+
+    Return:
+
+    Dataframe with columns already changed
+
+    '''
+    df[column] = df[column].apply(lambda x: pd.to_numeric(x, errors = 'coerce'))
+    return df
+
+def _exponential_smooth(data, alpha):
+    """
+    Function that exponentially smooths dataset so values are less 'rigid'
+    :param alpha: weight factor to weight recent values more
+    """
+
+    smoothed_data = data.ewm(alpha=alpha).mean()
+
+    # Check that the first and last values of the smoothed data are the same as the original data
+    smoothed_data.iloc[0] = data.iloc[0]
+    smoothed_data.iloc[-1] = data.iloc[-1]
+
+    return smoothed_data    

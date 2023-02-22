@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 import numpy as np
 from typing import Union
@@ -140,7 +141,7 @@ def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     fig = go.Figure()
     fig = px.sunburst(df, path=[interior, exterior], values=col_num, template = 'plotly_dark')
     fig.update_layout(width=800, height=600, title = title)
-    fig.show()
+    return fig
 
 def wordcloudviz(column):
     import matplotlib.pyplot as plt
@@ -194,3 +195,28 @@ def plot_cumulative_variance_ratio(pca, n_features):
 
     # Show the plot
     plt.show()
+
+def heatmap(df, n:int,target:str,columns:None):
+    '''
+    Heatmap which show us teh correlation of our numerical column of dataset with the target, where you can add specifics numbers 
+    
+    df -> must be the dataset we are working with
+    n -> number of columns we want to correlate with the target
+    target -> name of the column of the target, must be 'str'
+    columns -> must be all the columns we have in the dataset in previous step, in type object (df.columns)
+
+    Return:
+    Heatmap with YlOrBr colour and two decimals, only wiht n number of columns which correlate with our target
+    
+    '''
+
+    if columns is None:
+        columns = df.columns
+    
+    cols = df[columns].corr().nlargest(n,target)[target].index
+
+    cm = np.corrcoef(df[cols].values.T) 
+
+    plt.figure(figsize=(20,10))
+    hm = sns.heatmap(cm, cbar=True, annot=True, cmap='YlOrBr', fmt='.2f', yticklabels=cols.values, xticklabels=cols.values)
+    return hm

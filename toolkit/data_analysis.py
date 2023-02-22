@@ -54,3 +54,26 @@ def read_csv_zip(zip_file, csv_file, sep=';'):
 
     return df
 
+def chi_squared_test(df, feature, target):
+    import scipy.stats as stats
+    import pandas as pd
+    """
+    This function performs a chi-squared test of independence between two categorical variables.
+
+    Params:
+    - df: A DataFrame containing the variables of interest.
+    - feature: The independent variable to be analyzed.
+    - target: The dependent variable to compare the independent variable with.
+
+    Returns:
+    - chi2: The chi-squared value obtained in the test.
+    - p: The p-value obtained in the test.
+    """
+    # Create a contingency table from the independent and dependent variable data.
+    contingency_table = pd.crosstab(df[feature], df[target])
+
+    # Perform a chi-squared test of independence between the variables.
+    chi2, p, dof, expected = stats.chi2_contingency(contingency_table)
+
+    # Return the chi-squared value and p-value obtained in the test.
+    return chi2, p
