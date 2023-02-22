@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import Union
 import plotly.graph_objs as go
-from plotly import tools
+from plotly import subplots
 from collections import defaultdict
 import plotly.offline as py
 from wordcloud import STOPWORDS
@@ -62,7 +62,6 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     ----------
     - Bar chart representing the frequency of words, sorted from highest to lowest, divided by target variable.
     '''
-
     df1 = df[df[target] ==1]
     df0 = df[df[target] ==0]
 
@@ -104,10 +103,13 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     trace1 = horizontal_bar_chart(fd_sorted.head(50), 'blue')
 
     # Creating two subplots
-    fig = tools.make_subplots(rows=1, cols=2, vertical_spacing=0.04,
+    fig = subplots.make_subplots(rows=1, cols=2, vertical_spacing=0.04,
                           subplot_titles=["Frequent words from text with label 0", 
                                           "Frequent words from text with label 1"])
-    fig.append_trace(trace0, 1, 1)
-    fig.append_trace(trace1, 1, 2)
+    fig.add_trace(trace0, 1, 1)
+    fig.add_trace(trace1, 1, 2)
     fig['layout'].update(height=1200, width=900, paper_bgcolor='rgb(233,233,233)', title="Word Count Plots")
     py.iplot(fig, filename='word-plots')
+
+    return fig
+
