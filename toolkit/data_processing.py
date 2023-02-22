@@ -314,3 +314,17 @@ def convert_to_numeric(df,column:str):
     '''
     df[column] = df[column].apply(lambda x: pd.to_numeric(x, errors = 'coerce'))
     return df
+
+def _exponential_smooth(data, alpha):
+    """
+    Function that exponentially smooths dataset so values are less 'rigid'
+    :param alpha: weight factor to weight recent values more
+    """
+
+    smoothed_data = data.ewm(alpha=alpha).mean()
+
+    # Check that the first and last values of the smoothed data are the same as the original data
+    smoothed_data.iloc[0] = data.iloc[0]
+    smoothed_data.iloc[-1] = data.iloc[-1]
+
+    return smoothed_data    
