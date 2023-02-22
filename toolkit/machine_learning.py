@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
@@ -142,5 +140,4 @@ def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union
     if only_wrong:
         model_predictions_df = model_predictions_df[model_predictions_df['Top Prediction'] != model_predictions_df['Label']]
     # return the dataframe
-    return model_predictions_df   
->>>>>>> sean_dev
+    return model_predictions_df
