@@ -3,7 +3,7 @@ def buffdescribe(df,  stats=['mean', 'median', 'std']):
     '''
     Function to facilitate a first exploration of a dataframe's data by concentrating the most relevant information
 
-    Args:
+    Params:
     - df: Dataframe
     - stats: Descriptive statistics to calculate. Default: Mean, Median, and Standard Deviation
 
