@@ -295,3 +295,19 @@ def image_scrap(url, n:int):
 			download_image(download_dir, url, str(i) + ".jpg")
 
 	wd.quit()
+
+
+def worst_params(gridsearch):
+    '''
+    Function to obtain the worst params of a gridsearch. In case we need to train a gridsearch multiple times,
+    it can be useful to know which parameters are likely to be deleted, in order to make our training faster.
+
+    Args:
+    gridsearch: trained gridsearch
+
+    '''
+    position = list(gridsearch['rank_test_score']).index(gridsearch['rank_test_score'].max())
+    worst_params = gridsearch['params'][position]
+    worst_scoring = gridsearch['mean_test_score'][position]
+
+    return str(worst_params), worst_scoring

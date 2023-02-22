@@ -328,3 +328,69 @@ def _exponential_smooth(data, alpha):
     smoothed_data.iloc[-1] = data.iloc[-1]
 
     return smoothed_data    
+
+
+def add_previous(df, n, clas, values):
+    """
+    Add columns to the dataframe with the values of the last n events for each class.
+    
+    Parameters:
+    df (DataFrame): The input dataframe.
+    n (int): The number of previous events to include in the output dataframe.
+    clas (str): name of the column you want to obtain the previous values of.
+    values (str): name of the column whose previous values you need
+    
+    Returns:
+    None
+    """
+    # Group the dataframe by the clas column
+    grouped = df.groupby(clas)
+    
+    # Initialize a list to store the shifted values
+    shifted_values = []
+    
+    # Shift the values within each group n times to get the previous values of your clas
+    for i in range(1, n + 1):
+        shifted_values.append(grouped[values].shift(i))
+    
+    # Concatenate the shifted values with the original dataframe
+    new_cols = [f'Previous_value-{i}' for i in range(1, n + 1)]
+    for i, col in enumerate(new_cols):
+        df[col] = shifted_values[i]
+
+    return df
+
+def winner_loser(x, df, column):
+
+    """
+    Comparator of odd and even rows, checks which one is a bigger value and returns Victory, Loss or Draw
+    according to that. Prepared for sports, but appliable to other uses.
+
+    Args:
+    x (int): number of the index
+    df (df): dataframe to work in
+    column (str): name of the column we want to compare
+
+    Return: Victory, Draw or Loss
+    
+    """
+    if (x+2) % 2 == 0:                                  
+        if df[column][x] > df[column][x+1]:     
+            x = 'Victory'                               
+            return x                                    
+        elif df[column][x] < df[column][x+1]:   
+            x = 'Loss'
+            return x
+        else:
+            x = 'Draw'
+            return x
+    if (x+2) % 2 != 0:                                 
+        if df[column][x] > df[column][x-1]:
+            x = 'Victory'
+            return x
+        elif df[column][x] < df[column][x-1]:
+            x = 'Loss'
+            return x
+        else:
+            x = 'Draw'
+            return x
