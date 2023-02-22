@@ -169,3 +169,27 @@ def quickregression(name):
     print("MSE test:", mean_squared_error(y_test, modpred))
     print("RMSE test:", np.sqrt(mean_squared_error(y_test, modpred)))
     return(model.score(X_train, y_train))
+
+
+def load_model_zip(zip_file, model_file):
+    import pickle
+    import zipfile
+    """
+    Uploads a model file from a zip file.
+
+    Parameters
+    ----------
+         zip_file: The name of the zip file where the model file is located.
+         model_file: The name of the model file to load.
+
+    Returns:
+    ----------
+         The model loaded from the file.
+    """
+    # Abre el archivo zip en modo lectura
+    with zipfile.ZipFile(zip_file, "r") as zip:
+        # Lee el archivo de modelo del zip y lo carga en la memoria
+        with zip.open(model_file, "r") as file:
+            model = pickle.load(file)
+
+    return model
