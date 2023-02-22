@@ -169,3 +169,28 @@ def wordcloudviz(column):
     plt.tight_layout(pad=0)
     plt.show()
 >>>>>>> 0f8d8abe7a26aac02e768b21b22a1d2e58bd6d30
+
+def plot_cumulative_variance_ratio(pca, n_features):
+
+    '''
+    Function to visually represent the percentage of variance explained by each PCA component
+
+    Parameters =
+
+    pca: Name of the variable assigned to the PCA
+    n_features: Number of PCA components
+
+    Returns: 
+    Matplotlib lineplot of the variance explained by each PCA component
+
+
+    '''
+    cumulative_variance_ratio = np.cumsum(pca.explained_varianceratio)[:n_features]
+
+    # Create a bar plot of the cumulative variance ratio
+    plt.plot(range(1, n_features + 1), cumulative_variance_ratio)
+    plt.xlabel('Number of Principal Components')
+    plt.ylabel('Cumulative Variance Ratio')
+
+    # Show the plot
+    plt.show()
