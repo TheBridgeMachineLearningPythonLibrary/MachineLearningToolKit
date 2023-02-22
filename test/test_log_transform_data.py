@@ -1,18 +1,8 @@
 import pandas as pd
 import numpy as np
-import re
-from datetime import datetime
-from typing import List
-from nltk.corpus import stopwords
-from nltk.stem.snowball import SnowballStemmer
-import cv2 
-import os
-from skimage.io import imread
-import sys
 import pytest
 
-sys.path.append('/home/sean/Documentos/the_bridge_bootcamp/My_Workspaces/MachineLearningToolKit/toolkit')
-from data_processing import log_transform_data
+from toolkit.data_processing import log_transform_data
 
 
 def test_log_transform_data_ignore():
