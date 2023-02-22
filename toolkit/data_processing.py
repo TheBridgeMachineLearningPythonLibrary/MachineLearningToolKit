@@ -169,17 +169,12 @@ def buffdescribe(df,  stats=['mean', 'median', 'std']):
     describe = concatenado.sort_values(by=["MISSINGS (%)"], ascending=True)
 
     # Descriptive statistics
-    numeric_cols = df.select_dtypes(include=['int', 'float']).columns.tolist()
-    numeric_stats = df[numeric_cols].agg(stats)
-    numeric_stats.columns = [col + '_' + stat for col in numeric_stats.columns for stat in stats]
+    agg = df.agg(stats).transpose()
 
     # Merge in a new dataframe
-    describe = pd.merge(concatenado, numeric_stats, left_index=True, right_index=True, how='left')
-    describe.rename(columns={'mean': 'MEAN',
-                   'median': 'MEDIAN', 'std': 'STD'}, inplace=True),
+    describe = pd.merge(concatenado, agg, left_index=True, right_index=True, how='left')
 
     return describe
-
 
 def clean_text(df, column:str, language:str, target:str, filename:str='data_processed.csv'):
     
@@ -206,7 +201,7 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df[column] = df[column].str.replace(r'\s*@\w+', '', regex=True)
 
     # Remove punctuation marks and convert to lowercase
-    signos = re.compile("(\.)|(\;)|(\:)|(\!)|(\?)|(\¿)|(\@)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
+    signos = re.compile(r"(\.)|(\;)|(\:)|(\!)|(\?)|(\¿)|(\@)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
 
     def signs_tweets(tweet):
         return signos.sub('', tweet.lower())
@@ -220,8 +215,8 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df[column] = df[column].apply(remove_links)
 
     # Remove stopwords
+    stopwords = set(stopwords.words(language))
     def remove_stopwords(df):
-        stopwords = set(stopwords.words(language))
         return " ".join([word for word in df.split() if word not in stopwords])
     df[column] = df[column].apply(remove_stopwords)
 
