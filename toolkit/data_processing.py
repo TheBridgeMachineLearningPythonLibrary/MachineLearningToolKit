@@ -298,3 +298,19 @@ def load_imgs(path, im_size:int):
     y_train = np.array(y)
     
     return df, X_train, y_train
+
+def convert_to_numeric(df,column:str):
+    '''
+    This function convert any number string in that column, to int or float ignoring any NaN value.
+
+    df -> dataframe we are working with
+
+    column -> column which we want to convert to numeric. Must be 'str'
+
+    Return:
+
+    Dataframe with columns already changed
+
+    '''
+    df[column] = df[column].apply(lambda x: pd.to_numeric(x, errors = 'coerce'))
+    return df
