@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: thebridgemltoolkit
-Version: 0.2
+Version: 0.3
 Summary: Helper functions for all stages of the machine learning model building process
 Home-page: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit
-Download-URL: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_02.tar.gz
+Download-URL: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_03.tar.gz
 Author: TheBridgeMachineLearningPythonLibrary
 Author-email: seenstevol@protonmail.com
 License: MIT
