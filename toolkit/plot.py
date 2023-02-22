@@ -114,10 +114,9 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     fig['layout'].update(height=1200, width=900, paper_bgcolor='rgb(233,233,233)', title="Word Count Plots")
     py.iplot(fig, filename='word-plots')
 
-<<<<<<< HEAD
     return fig
+    
 
-=======
 def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     '''
     This is a Plotly Graph similar to pie chart but with two levels, interior is for columns which have one or two unique values, and 
@@ -169,7 +168,6 @@ def wordcloudviz(column):
     plt.axis("off")
     plt.tight_layout(pad=0)
     plt.show()
->>>>>>> 0f8d8abe7a26aac02e768b21b22a1d2e58bd6d30
  
 def plot_cumulative_variance_ratio(pca, n_features):
 
