@@ -169,7 +169,7 @@ def wordcloudviz(column):
     plt.tight_layout(pad=0)
     plt.show()
 >>>>>>> 0f8d8abe7a26aac02e768b21b22a1d2e58bd6d30
-
+ 
 def plot_cumulative_variance_ratio(pca, n_features):
 
     '''
