@@ -1,0 +1,14 @@
+LICENSE.txt
+README.md
+setup.cfg
+setup.py
+thebridgemltoolkit/__init__.py
+thebridgemltoolkit/data_analysis.py
+thebridgemltoolkit/data_processing.py
+thebridgemltoolkit/machine_learning.py
+thebridgemltoolkit/plot.py
+thebridgemltoolkit.egg-info/PKG-INFO
+thebridgemltoolkit.egg-info/SOURCES.txt
+thebridgemltoolkit.egg-info/dependency_links.txt
+thebridgemltoolkit.egg-info/requires.txt
+thebridgemltoolkit.egg-info/top_level.txt
