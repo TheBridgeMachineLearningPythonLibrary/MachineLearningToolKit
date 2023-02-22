@@ -218,3 +218,36 @@ def heatmap(df, n:int,target:str,columns:None):
     plt.figure(figsize=(20,10))
     hm = sns.heatmap(cm, cbar=True, annot=True, cmap='YlOrBr', fmt='.2f', yticklabels=cols.values, xticklabels=cols.values)
     return hm
+
+def plot_roc_curve(y_true, y_pred, pos_label=1, figsize=(8, 8)):
+    '''
+    Function to plot the ROC curve of a binary classifier
+
+    Parameters:
+
+    y_true: true labels
+    y_pred: model predictions
+    pos_label: positive label (default: 1)
+    figsize: figure size (default: (8, 8))
+
+    Returns: 
+    Lineplot of the ROC curve
+    
+    '''
+    # Compute the false positive rate, true positive rate, and thresholds
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred, pos_label=pos_label)
+
+    # Compute the area under the curve (AUC)
+    roc_auc = auc(fpr, tpr)
+
+    # Create the ROC curve plot
+    plt.figure(figsize=figsize)
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (AUC = %0.2f)' % roc_auc)
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver operating characteristic (ROC) curve')
+    plt.legend(loc="lower right")
+    plt.show()
