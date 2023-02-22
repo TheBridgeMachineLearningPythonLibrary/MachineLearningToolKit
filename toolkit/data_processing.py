@@ -1,3 +1,10 @@
+import pandas as pd
+import numpy as np
+import re
+from datetime import datetime
+from typing import List
+
+
 def extract_date(df, date_column_name):
     '''
     Function to extract the data of a date, from a column that does not have date format.
@@ -16,9 +23,6 @@ def extract_date(df, date_column_name):
         df : Dataframe with the changes made
 
     '''
-    import re
-    from datetime import datetime
-
     match = re.search(r'\d{4}.\d{2}.\d{2}', date_column_name)
     date = datetime.strptime(match.group(), '%Y-%m-%d').date()
 
@@ -83,3 +87,29 @@ def last_columndf(df,feature):
     lista.append(feature)
     df=df[lista]
     return df
+
+
+
+def log_transform_data(df: pd.DataFrame, col_ignore: List[str]) -> pd.DataFrame:
+    '''
+    Log transform the numeric columns and recombine back with the non-numeric
+    Option to skip specific numeric columns
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataset we want to carry out log transform on
+    col_ignore : List[str]
+        A list of numeric column names that we want to skip the log transform for
+
+    
+    Return
+    ----------
+    pd.DataFrame with same dimensions as input
+    '''
+    df_ignore = df[col_ignore]
+    df_rest = df.drop(columns = col_ignore)
+    numeric = df_rest.select_dtypes(include=np.number).apply(np.log1p)
+    non_numeric = df_rest.select_dtypes(exclude=np.number)
+    
+    return pd.concat([numeric, non_numeric, df_ignore], axis = 1)
