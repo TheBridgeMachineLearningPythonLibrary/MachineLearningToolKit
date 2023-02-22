@@ -125,11 +125,14 @@ def buffdescribe(df,  stats=['mean', 'median', 'std']):
     '''
     Function to facilitate a first exploration of a dataframe's data by concentrating the most relevant information
 
-    Params:
+    Parameters
+    ----------
     - df: Dataframe
     - stats: Descriptive statistics to calculate. Default: Mean, Median, and Standard Deviation
 
-    Returns: Dataframe with the following columns:
+    Returns
+    ----------
+    Dataframe with the following columns:
     - Column names from the original df
     - Data type of each column
     - Percentage of null values in each column
@@ -183,14 +186,16 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     ''' 
     Function to preprocess and clean a dataframe with text as a preliminary step for Natural Language Processing
 
-    Params:
+    Parameters
+    ----------
     - df: Dataframe
     - column: The name of the column in which the text is located (str)
     - language: The language in which the text is written (str) in ENGLISH (e.g. 'spanish', 'english')
     - target: The name of the column in which the target to be predicted is located
     - filename: Name for the processed dataframe to be saved
 
-    Returns:
+    Returns
+    ----------
     - df_processed: Dataframe after cleaning. It contains only the text variable and the target variable
     '''
 
@@ -244,11 +249,13 @@ def load_imgs(path, im_size:int):
     (e.g. one directory for dog photos and another for cat photos).
     It can be used for both binary and categorical classification.
 
-    Args:
+    Parameters
+    ----------
     - path: Path where the subdirectories with the images are located.
     - im_size: Size to which we want to resize the image (e.g. 32).
 
-    Returns:
+    Returns
+    ----------
     - df: Dataframe with the names of the images and the category to which they belong (target).
     - X_train: Array with the image data loaded after resizing.
     - y_train: Array with the target values.
