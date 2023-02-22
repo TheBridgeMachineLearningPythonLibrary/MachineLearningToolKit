@@ -51,13 +51,15 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     ''' 
     This function allows visualizing the frequency of occurrence of words and n-grams (sets of a number of consecutive words) based on the target variable.
     
-    Parameters:
+    Parameters
+    ----------
     - df: Dataframe with a text variable.
     - target: Column of the dataframe where the target variable is located.
     - text: Column of the dataframe where the text is located.
     - n_gram: Number of consecutive words whose frequency we want to visualize.
     
-    Returns:
+    Returns
+    ----------
     - Bar chart representing the frequency of words, sorted from highest to lowest, divided by target variable.
     '''
 
