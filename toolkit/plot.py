@@ -7,6 +7,8 @@ from plotly import tools
 from collections import defaultdict
 import plotly.offline as py
 from wordcloud import STOPWORDS
+import plotly.express as px
+
 
 def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFrame, np.ndarray], prediction_col: str = 'Top Prediction', label_col: str = 'Label'):
     '''
@@ -111,3 +113,28 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     fig.append_trace(trace1, 1, 2)
     fig['layout'].update(height=1200, width=900, paper_bgcolor='rgb(233,233,233)', title="Word Count Plots")
     py.iplot(fig, filename='word-plots')
+
+def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
+    '''
+    This is a Plotly Graph similar to pie chart but with two levels, interior is for columns which have one or two unique values, and 
+    the exterior is for columns which have more values.
+
+    Parameters
+	----------
+    df -> dataframe we are working with 
+    interior -> recommended for columns which have two or so uniques values. Must be 'str'
+    exterior -> recommended for columns which have more values, because the graph has more space than inside. Must be 'str'
+    col_num -> it,s the column which we want measured, show us the quantity of each value for both column (interior and exterior), must be 'str'
+    title -> the title we want to show in the pie, must be 'str'
+
+    Return
+	----------
+
+    Return a pie chart with two levels, interior and exterior.
+    
+    '''
+
+    fig = go.Figure()
+    fig = px.sunburst(df, path=[interior, exterior], values=col_num, template = 'plotly_dark')
+    fig.update_layout(width=800, height=600, title = title)
+    fig.show()
