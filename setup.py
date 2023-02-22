@@ -10,11 +10,13 @@ setup(
   author_email = 'seenstevol@protonmail.com',
   url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit',
   download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_01.tar.gz',
-  keywords = ['machine learning', 'data visualization', 'data processing', 'sklean', 'pandas'],
+  keywords = ['machine learning', 'data visualization', 'data processing', 'sklearn', 'pandas'],
   install_requires=[
           'pandas',
           'numpy',
-          'imblearn'
+          'imblearn',
+          'sklearn',
+          'matplotlib'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',
