@@ -65,3 +65,21 @@ def uniq_value(list_values:list):
         if i not in unique:
             unique.extend(list_values)
     return unique
+
+def last_columndf(df,feature):
+    '''
+    Function will return the dataframe with the column entered at the last position
+    ----------
+    df: dataframe
+    feature: to move at the last position
+
+    Return
+    ----------
+    df: dataframe
+    '''
+
+    lista=list(df.columns.values)
+    lista.remove(feature)
+    lista.append(feature)
+    df=df[lista]
+    return df
