@@ -1,16 +1,24 @@
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
-from sklearn.preprocessing import PolynomialFeatures
+
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, roc_curve, auc, roc_auc_score, confusion_matrix
+
 import pandas as pd
 import numpy as np
+
 from typing import List, Union
 from selenium.webdriver.common.by import By
+from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
 import os
+from datetime import datetime
 import time
 import io
 from PIL import Image
+import pickle
+
 
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
     """
@@ -311,3 +319,336 @@ def worst_params(gridsearch):
     worst_scoring = gridsearch['mean_test_score'][position]
 
     return str(worst_params), worst_scoring
+
+
+# Function to calculate a prediction score
+def show_scoring(y, y_prediction, label:str, round:int=3, auc_sc:bool=True, roc_auc_sc:bool=True, confusion_matrix_sc:bool=True):
+    '''
+    Function to calculate a prediction score
+
+    Parameters
+    ----------
+        y: target values.
+        
+        y_prediction: prediction values.
+
+        label: value type label.
+
+        round: value rounding.
+
+        auc_sc: compute Area Under the Curve (AUC) using the trapezoidal rule.
+
+        roc_auc_sc: compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
+
+        confusion_matrix_sc: compute confusion matrix to evaluate the accuracy of a classification.
+
+    Return
+    ------
+        dict(accu --> accuracy_score, 
+            auc_s --> roc_curve.auc, 
+            roc_auc --> roc_auc_score, 
+            conf_mat --> confusion_matrix)
+    '''
+    try:
+        auc_r = None
+        roc_auc_r = None
+        conf_mat_r = None
+
+        print('-'*30)
+
+        accu_r = accuracy_score(y, y_prediction).round(round)
+        print('ACCURACY',label,':',accu_r)
+
+        if auc_sc:
+            fpr, tpr, thresh = roc_curve(y, y_prediction)
+            auc_r = auc(fpr, tpr).round(round)
+            print('AUC',label,':',auc_r)
+
+        if roc_auc_sc:
+            roc_auc_r = roc_auc_score(y, y_prediction).round(round)
+            print('ROC AUC',label,':',roc_auc_r)
+        
+        if confusion_matrix_sc:
+            c_mat = confusion_matrix(y, y_prediction, normalize='true')
+            conf_mat_r = c_mat.round(round)
+            print('CONFUSION MATRIX',label,':',conf_mat_r)
+
+        print('-'*30)
+
+        return dict(accu_r=accu_r, auc_r=auc_r, roc_auc_r=roc_auc_r, conf_mat_r=conf_mat_r)
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to train and predict the model with a classification algorithm
+def processing_model_classification(model:object, x, y, test_size_split:float=0.25, shuffle_split:bool=False, random_state_split:int=None, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, train_score:bool=False, test_score:bool=True):
+    '''
+    Function to train and predict the model with a classification algorithm
+
+    Parameters
+    ----------
+        model: algorithm / model.
+        x: {array-like, sparse matrix} of shape (n_samples, n_features).
+            training data.
+
+        y: {array-like, sparse matrix} of shape (n_samples,).
+            target values.
+
+        test_size_split: if float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test split. 
+            If int, represents the absolute number of test samples. If None, it will be set to 0.25.
+
+        shuffle_split: whether or not to shuffle the data before splitting.
+
+        minMaxScaler: whether or not to transform features by scaling each feature to a given range.
+
+        minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
+
+        standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
+
+        train_score: compute the score of train.
+
+        test_score: compute the score of test.
+
+    Return
+    ------
+        model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test
+    '''
+    try:
+        # Split Train and Test
+        if random_state_split == None:
+            X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=test_size_split, shuffle=shuffle_split)
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=test_size_split, shuffle=shuffle_split, random_state=random_state_split)
+
+        # Number of rows to be processed
+        print('-'*30)
+        print('Rows to process for Train:', len(X_train))
+        print('Rows to process for Test:', len(X_test))
+        print('-'*30)
+
+        # Data scaling - MinMaxScaler()
+        if minMaxScaler:
+            X_train = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_train)
+            X_test = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_test)
+
+        # Data scaling - StandardScaler()
+        if standardScaler:
+            X_train = StandardScaler().fit_transform(X_train)
+            X_test = StandardScaler().fit_transform(X_test)
+
+        # Training the model
+        model.fit(X_train, y_train)
+
+        # Model prediction with Train
+        y_pred_train = model.predict(X_train)
+
+        # Model prediction with Test
+        y_pred_test = model.predict(X_test)
+
+        # Return the mean accuracy on the given train data and labels
+        print('SCORE TRAIN:',model.score(X_train, y_train).round(3))
+
+        # Compute the score of Train
+        if train_score:
+            show_scoring(y_train, y_pred_train, 'TRAIN', 3)
+
+        # Compute the score of Test
+        if test_score:
+            show_scoring(y_test, y_pred_test, 'TEST', 3)
+
+        return model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test # return model, X_test, y_test, y_pred_test
+    
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to predict the model with a classification algorithm
+def predict_model_classification(model:object, X_test, y_test, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, test_score:bool=True):
+    '''
+    Function to predict the model with a classification algorithm
+
+    Parameters
+    ----------
+        model: algorithm / model.
+
+        X_test: {array-like, sparse matrix} of shape (n_samples, n_features).
+            training data.
+
+        y_test: {array-like, sparse matrix} of shape (n_samples,).
+            target values.
+
+        minMaxScaler: whether or not to transform features by scaling each feature to a given range.
+
+        minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
+
+        standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
+
+        test_score: calculates the score of test
+        
+    Return
+    ------
+        X_test, y_pred_test
+    '''
+    try:
+        # Data scaling - MinMaxScaler()
+        if minMaxScaler:
+            X_test = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_test)
+
+        # Data scaling - StandardScaler()
+        if standardScaler:
+            X_test = StandardScaler().fit_transform(X_test)
+
+        # Model prediction with Test
+        y_pred_test = model.predict(X_test)
+
+        # Compute the score of Test
+        if test_score:
+            show_scoring(y_test, y_pred_test, 'TEST', 3)
+
+        return X_test, y_pred_test
+    
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to export a model
+def export_model(model:object, dir_model:str, name_model:str, timestamp:bool=False):
+    '''
+    Function to export a model
+
+    Parameters
+    ----------
+        model: algorithm / model we want to save.
+
+        dir_model: directory to save the model.
+
+        name_model: name of the model to save.
+        
+        timestamp: time stamp to rename the model.
+    '''
+    try:
+        # Format the current date and time for the renaming of the file to be exported
+        if timestamp:
+            now = datetime.now()
+            year = now.strftime('%Y')[2:]
+            timestamp = '_' + year + now.strftime('%m%d%H%M%S')
+        else:
+            timestamp = ''
+
+        # Export the model with the renamed model to the specified directory
+        filename = os.path.join(dir_model, name_model + timestamp)
+        with open(filename, 'wb') as archivo:
+            pickle.dump(model, archivo)
+
+        # Show info
+        print('-'*46)
+        print('Model saved at', dir_model)
+        print('-'*46)
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to import a model
+def import_model(dir_model:str, name_model:str):
+    '''
+    Function to import a model
+
+    Parameters
+    ----------
+        dir_model: directory to import the model.
+        
+        name_model: name of the model to be imported.
+    
+    Return
+    ------
+        model_import: algorithm / model we have saved.
+    '''
+    try:
+        # Import the model
+        filename = os.path.join(dir_model, name_model)
+        with open(filename, 'rb') as archivo:
+            model_import = pickle.load(archivo)
+
+        return model_import
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
