@@ -2,7 +2,7 @@ Welcome to ds11mltoolkit, we are delighted to see you here!
 
 Thank you for your interest, and we hope this library can help you in your daily life as a **Data Scientist**
 
-<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/logo.jpg?raw=true)</center>
+![Logotipo](./assets/logo.jpg)
 
 [![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-TheBridge-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://www.thebridge.tech/) ![Powered by NumFOCUS](https://img.shields.io/badge/Contributors-13-orange.svg?style=flat&colorA=E1523D&colorB=007D8A) ![PyPI](https://img.shields.io/pypi/v/ds11mltoolkit.svg)
 
@@ -157,7 +157,7 @@ output: ['Cities', 'Teams', 'Players']
 
 ## Github framework
 
-<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/diagrama.png?raw=true)</center>
+![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/diagrama.png?raw=true)
 
 ## Contributors
 
