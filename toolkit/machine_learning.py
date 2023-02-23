@@ -173,7 +173,7 @@ def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union
     # return the dataframe
     return model_predictions_df
 
-def quickregression(name):
+def quickregression(name, X_train, y_train, X_test, y_test):
     from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
     """
     Function to save time when doing Machine Learning models. 
@@ -183,6 +183,14 @@ def quickregression(name):
     ----------
     name = Name of the ML model.
            Input Example = LinearRegression
+    X_train: pandas.DataFrame or numpy.ndarray
+           The training data for X
+    X_test: pandas.DataFrame or numpy.ndarray
+           The test data for X
+    y_train: pandas.DataFrame or numpy.ndarray
+           The training data for y
+    y_test: pandas.DataFrame or numpy.ndarray
+           The test data for y
     
     Returns
     ----------
