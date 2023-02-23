@@ -48,11 +48,12 @@ def uniq_value(list_values:list):
     ----------
     unique: list of unique values
     '''
+
     unique = []
-    for i in list_values:
+    for i in list:
         if i not in unique:
-            unique.extend(list_values)
-    return unique
+            unique.append(i)
+        return unique
 
 def last_columndf(df,feature):
     '''
