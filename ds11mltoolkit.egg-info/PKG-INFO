@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: ds11mltoolkit
-Version: 1.0
+Version: 1.3
 Summary: Helper functions for all stages of the machine learning model building process
 Home-page: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit
-Download-URL: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/V_1.tar.gz
+Download-URL: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_1_3.tar.gz
 Author: TheBridgeMachineLearningPythonLibrary
 Author-email: seenstevol@protonmail.com
 License: MIT
