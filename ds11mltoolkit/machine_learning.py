@@ -2,7 +2,7 @@ from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, roc_curve, auc, roc_auc_score, confusion_matrix
+from sklearn.metrics import accuracy_score, roc_curve, auc, roc_auc_score, confusion_matrix, mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
 
 import pandas as pd
 import numpy as np
@@ -18,6 +18,7 @@ import time
 import io
 from PIL import Image
 import pickle
+import zipfile
 
 
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
@@ -159,7 +160,7 @@ def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union
     return model_predictions_df
 
 def quickregression(name):
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
+    
     """
     Function to save time when doing Machine Learning models. 
     It only asks the name of the model to train and returns the scoring.
@@ -188,8 +189,7 @@ def quickregression(name):
 
 
 def load_model_zip(zip_file, model_file):
-    import pickle
-    import zipfile
+
     """
     Uploads a model file from a zip file.
 
