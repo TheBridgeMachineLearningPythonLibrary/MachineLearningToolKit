@@ -1,8 +1,8 @@
 from distutils.core import setup
 
 setup(
-  name = 'toolkit',
-  packages = ['toolkit'],
+  name = 'mltoolkit',
+  packages = ['mltoolkit'],
   version = '0.1',
   license = 'MIT',
   description = 'Helper functions for all stages of the machine learning model building process',
