@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from toolkit.machine_learning import predict_model_classification, import_model
 
 from sklearn.neighbors import KNeighborsClassifier
@@ -19,8 +22,10 @@ def test_predict_model_classification():
     y_test = pd.DataFrame({'':[1, 1]})
     y_pred_test = [0, 0]
 
-    X_test_model, y_pred_test_model = predict_model_classification(model_import, X_test, y_test, test_score=False) 
+    X_test_model, y_pred_test_model=predict_model_classification(model_import, X_test, y_test, test_score=False) 
+    
+    list_y=list(y_pred_test_model.tolist())
 
     assert X_test_model.equals(X_test)
-    assert y_pred_test_model == y_pred_test
+    assert list_y == list(y_pred_test)
     # assert y_pred_test_model.tolist() == y_pred_test

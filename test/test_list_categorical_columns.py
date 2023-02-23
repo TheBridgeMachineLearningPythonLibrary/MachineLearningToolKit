@@ -1,16 +1,15 @@
+import sys
+sys.path.append("..")
 
+from toolkit.data_processing import list_categorical_columns
 
-from toolkit.data_processing import last_columndf, uniq_value,list_categorical_columns
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
 
 import pandas as pd
-import numpy as pd
+import numpy as np
 import pytest
 
 
-@pytest.fixture
+
 
 
 def test_data():

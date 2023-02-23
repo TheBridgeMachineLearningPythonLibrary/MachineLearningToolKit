@@ -1,12 +1,19 @@
 
+import os, sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
+
+
+from toolkit.data_analysis import chi_squared_test
+import pandas as pd
+import scipy.stats as stats
+import pytest
+import numpy as np
 
 
 def test_chi_squared_test():
-    from Chi import chi_squared_test
-    import pandas as pd
-    import scipy.stats as stats
-    import pytest
-    import numpy as np
+
     # Create a sample DataFrame
     data = {'feature': ['A', 'B', 'C', 'D', 'E'],
             'target': np.random.randint(2, size=5)}

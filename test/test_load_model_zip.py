@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import pickle
 import zipfile
 import tempfile

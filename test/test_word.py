@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from toolkit.plot import wordcloudviz
 
 import pytest

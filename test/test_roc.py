@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import numpy as np
 import pytest
 from toolkit.plot import plot_roc_curve

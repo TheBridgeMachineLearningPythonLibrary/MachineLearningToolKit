@@ -1,4 +1,8 @@
-from add_previous import add_previous
+import sys
+sys.path.append("..")
+
+
+from toolkit.data_processing import add_previous
 import pandas as pd
 
 df = pd.DataFrame(data= {'Goals': [0, 2, 1, 4, 5, 2, 1, 0, 2, 0, 1, 1], 
@@ -12,4 +16,4 @@ def test_add_previous():
     print(list_features)
     length = len(list_features)
 
-    assert length == 5
+    assert length== 5

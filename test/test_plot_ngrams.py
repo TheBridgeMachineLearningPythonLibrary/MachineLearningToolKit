@@ -1,6 +1,7 @@
-from toolkit.data_processing import *
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
+import sys
+sys.path.append("..")
+
+
 from toolkit.plot import plot_ngrams
 
 import pandas as pd

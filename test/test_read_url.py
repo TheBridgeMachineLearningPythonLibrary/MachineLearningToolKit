@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import pytest
 import pandas as pd
 from toolkit.data_analysis import read_url

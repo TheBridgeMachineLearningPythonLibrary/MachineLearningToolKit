@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from toolkit.machine_learning import processing_model_classification
 
 from sklearn.neighbors import KNeighborsClassifier

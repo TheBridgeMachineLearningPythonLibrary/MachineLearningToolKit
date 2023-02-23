@@ -1,8 +1,9 @@
 # Importa la función a testear
+import sys
+sys.path.append("..")
+
 from toolkit.data_processing import load_imgs
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+
 
 import pandas as pd
 import numpy as np

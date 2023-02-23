@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from toolkit.machine_learning import show_scoring
 import pandas as pd
 

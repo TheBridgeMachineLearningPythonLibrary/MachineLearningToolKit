@@ -1,7 +1,10 @@
-from worst_params import worst_params
+import sys
+sys.path.append("..")
+
+from toolkit.machine_learning import worst_params
 import pytest
 import numpy as np
-from imports_worst_params import clf_cv_results, df
+from .imports_worst_params import clf_cv_results, df
 from sklearn.svm import SVC
 import json
 

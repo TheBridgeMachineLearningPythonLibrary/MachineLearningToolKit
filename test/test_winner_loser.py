@@ -1,4 +1,8 @@
-from winner_loser import winner_loser
+import sys
+sys.path.append("..")
+
+
+from toolkit.data_processing import winner_loser
 import pandas as pd
 import pytest
 

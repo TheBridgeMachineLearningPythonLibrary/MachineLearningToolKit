@@ -1,11 +1,15 @@
 
+import os, sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
+
+
+from toolkit.data_processing import buffdescribe
 import pandas as pd
 import pytest
 
-from toolkit.data_processing import buffdescribe
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+
 
 @pytest.fixture
 

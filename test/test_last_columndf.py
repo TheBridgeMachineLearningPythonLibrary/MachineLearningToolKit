@@ -1,16 +1,17 @@
 
+import os, sys
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
 
-from toolkit.data_processing import last_columndf, uniq_value,list_categorical_columns
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+from toolkit.data_processing import last_columndf
+
 
 import pandas as pd
-import numpy as pd
+import numpy as np
 import pytest
 
 
-@pytest.fixture
 
 
 def test_data():

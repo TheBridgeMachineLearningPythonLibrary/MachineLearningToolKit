@@ -1,4 +1,8 @@
-from smoth import _exponential_smooth
+import sys
+sys.path.append("..")
+
+
+from toolkit.data_processing import _exponential_smooth
 import pandas as pd
 def test_exponential_smooth():
     # Define a sample dataset to test with

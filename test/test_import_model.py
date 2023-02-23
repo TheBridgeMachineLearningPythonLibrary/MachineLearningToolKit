@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from toolkit.machine_learning import import_model
 
 from sklearn.neighbors import KNeighborsClassifier

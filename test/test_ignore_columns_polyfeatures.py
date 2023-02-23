@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 import pandas as pd
 from typing import List
 from sklearn.preprocessing import PolynomialFeatures
