@@ -1,4 +1,8 @@
 import pandas as pd
+import zipfile
+import scipy.stats as stats
+import pandas as pd
+import webbrowser
 
 def read_url(url):
 
@@ -31,9 +35,6 @@ def read_url(url):
                 
 
 def read_csv_zip(zip_file, csv_file, sep=';'):
-
-    import pickle
-    import zipfile
     """
     Upload a CSV file from a zip file with custom separation.
 
@@ -55,8 +56,6 @@ def read_csv_zip(zip_file, csv_file, sep=';'):
     return df
 
 def chi_squared_test(df, feature, target):
-    import scipy.stats as stats
-    import pandas as pd
     """
     This function performs a chi-squared test of independence between two categorical variables.
 
@@ -91,7 +90,6 @@ def solver(valor=None):
     ---------
     Opens a browser with guidance.
     """
-    import webbrowser
     if valor is None:
         webbrowser.open("https://chat.openai.com/chat")
     else:

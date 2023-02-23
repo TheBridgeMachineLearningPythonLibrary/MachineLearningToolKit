@@ -3,6 +3,7 @@ from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_curve, auc, roc_auc_score, confusion_matrix
+from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
 
 import pandas as pd
 import numpy as np
@@ -11,14 +12,13 @@ from typing import List, Union
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 import requests
-from bs4 import BeautifulSoup
 import os
 from datetime import datetime
 import time
 import io
 from PIL import Image
 import pickle
-
+import zipfile
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -32,6 +32,7 @@ from sklearn.preprocessing import scale
 
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
+
 
 
 
@@ -89,8 +90,6 @@ def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=F
 
     # Display the balanced data if specified
     if visualize:
-        import matplotlib.pyplot as plt
-
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.set_title('Distribución de la variable objetivo balanceada')
         y_resampled.value_counts().plot(kind='bar', ax=ax)
@@ -173,8 +172,7 @@ def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union
     # return the dataframe
     return model_predictions_df
 
-def quickregression(name):
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
+def quickregression(name, X_train, y_train, X_test, y_test):
     """
     Function to save time when doing Machine Learning models. 
     It only asks the name of the model to train and returns the scoring.
@@ -201,10 +199,7 @@ def quickregression(name):
     print("RMSE test:", np.sqrt(mean_squared_error(y_test, modpred)))
     return(model.score(X_train, y_train))
 
-
 def load_model_zip(zip_file, model_file):
-    import pickle
-    import zipfile
     """
     Uploads a model file from a zip file.
 

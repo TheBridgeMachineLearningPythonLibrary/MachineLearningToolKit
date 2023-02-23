@@ -7,11 +7,10 @@ import plotly.graph_objs as go
 from plotly import subplots
 from collections import defaultdict
 import plotly.offline as py
-from wordcloud import STOPWORDS
+from wordcloud import STOPWORDS, WordCloud
 import plotly.express as px
 from sklearn.metrics import auc, roc_curve
 import folium
-
 
 def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFrame, np.ndarray], prediction_col: str = 'Top Prediction', label_col: str = 'Label'):
     '''
@@ -145,8 +144,6 @@ def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     return fig
 
 def wordcloudviz(column):
-    import matplotlib.pyplot as plt
-    from wordcloud import WordCloud
     """
     Function to create a quick visualization of wordclouds in a given column of a dataframe called df.
 
