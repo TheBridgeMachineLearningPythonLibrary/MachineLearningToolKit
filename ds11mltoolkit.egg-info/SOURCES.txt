@@ -1,0 +1,14 @@
+LICENSE.txt
+README.md
+setup.cfg
+setup.py
+ds11mltoolkit/__init__.py
+ds11mltoolkit/data_analysis.py
+ds11mltoolkit/data_processing.py
+ds11mltoolkit/machine_learning.py
+ds11mltoolkit/plot.py
+ds11mltoolkit.egg-info/PKG-INFO
+ds11mltoolkit.egg-info/SOURCES.txt
+ds11mltoolkit.egg-info/dependency_links.txt
+ds11mltoolkit.egg-info/requires.txt
+ds11mltoolkit.egg-info/top_level.txt
