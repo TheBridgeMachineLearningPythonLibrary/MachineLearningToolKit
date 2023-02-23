@@ -12,7 +12,6 @@ setup(
   download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_1_3.tar.gz',
   keywords = ['machine learning', 'data visualization', 'data processing', 'sklearn', 'pandas'],
   install_requires=['pandas',
-                    'zipfile',
                     'scipy',
                     'nltk',
                     'opencv-python-headless',
