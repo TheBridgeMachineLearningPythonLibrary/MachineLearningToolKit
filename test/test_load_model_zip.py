@@ -4,7 +4,7 @@ sys.path.append("..")
 import pickle
 import zipfile
 import tempfile
-from toolkit.machine_learning import load_model_zip
+from ds11mltoolkit.machine_learning import load_model_zip
 import os
 import tempfile
 

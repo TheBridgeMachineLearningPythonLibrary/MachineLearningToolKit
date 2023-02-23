@@ -1,6 +1,6 @@
 import sys
 sys.path.append('..')
-from toolkit.data_processing import ImageDataGen
+from ds11mltoolkit.data_processing import ImageDataGen
 import numpy as np
 
 x = np.load('./image_data_gen_test_data/X_image_data_gen_test.npy')

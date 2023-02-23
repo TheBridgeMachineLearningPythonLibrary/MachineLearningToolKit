@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.machine_learning import predict_model_classification, import_model
+from ds11mltoolkit.machine_learning import predict_model_classification, import_model
 
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd

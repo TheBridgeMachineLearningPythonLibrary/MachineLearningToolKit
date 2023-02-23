@@ -5,7 +5,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 
 
-from toolkit.machine_learning import balance_binary_target
+from ds11mltoolkit.machine_learning import balance_binary_target
 
 
 

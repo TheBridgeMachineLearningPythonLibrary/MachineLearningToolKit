@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 
 
-from toolkit.data_processing import add_previous
+from ds11mltoolkit.data_processing import add_previous
 import pandas as pd
 
 df = pd.DataFrame(data= {'Goals': [0, 2, 1, 4, 5, 2, 1, 0, 2, 0, 1, 1], 

@@ -5,7 +5,7 @@ import pandas as pd
 from typing import List
 from sklearn.preprocessing import PolynomialFeatures
 
-from toolkit.machine_learning import ignore_columns_polyfeatures
+from ds11mltoolkit.machine_learning import ignore_columns_polyfeatures
 
 
 def test_log_transform_data_ignore():

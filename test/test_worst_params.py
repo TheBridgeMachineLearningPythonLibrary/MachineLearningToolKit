@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.machine_learning import worst_params
+from ds11mltoolkit.machine_learning import worst_params
 import pytest
 import numpy as np
 from .imports_worst_params import clf_cv_results, df

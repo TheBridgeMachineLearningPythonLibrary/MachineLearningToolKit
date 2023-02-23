@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.machine_learning import quickregression
+from ds11mltoolkit.machine_learning import quickregression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
 
 

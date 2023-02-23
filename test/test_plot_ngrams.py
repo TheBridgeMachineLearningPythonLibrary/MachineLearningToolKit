@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 
 
-from toolkit.plot import plot_ngrams
+from ds11mltoolkit.plot import plot_ngrams
 
 import pandas as pd
 import numpy as np

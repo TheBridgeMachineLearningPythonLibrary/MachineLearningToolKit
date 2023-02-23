@@ -5,7 +5,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 
 
-from toolkit.data_processing import buffdescribe
+from ds11mltoolkit.data_processing import buffdescribe
 import pandas as pd
 import pytest
 

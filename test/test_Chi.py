@@ -5,7 +5,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 
 
-from toolkit.data_analysis import chi_squared_test
+from ds11mltoolkit.data_analysis import chi_squared_test
 import pandas as pd
 import scipy.stats as stats
 import pytest

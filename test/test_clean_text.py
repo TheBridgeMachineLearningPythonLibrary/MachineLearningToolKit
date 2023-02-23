@@ -7,7 +7,7 @@ sys.path.insert(0, parent_dir_path)
 import pytest
 import pandas as pd
 
-from toolkit.data_processing import clean_text
+from ds11mltoolkit.data_processing import clean_text
 
 
 #@pytest.fixture

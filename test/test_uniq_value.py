@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.data_processing import uniq_value
+from ds11mltoolkit.data_processing import uniq_value
 
 import pandas as pd
 import numpy as np

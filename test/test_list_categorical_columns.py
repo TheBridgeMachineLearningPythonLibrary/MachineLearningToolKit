@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.data_processing import list_categorical_columns
+from ds11mltoolkit.data_processing import list_categorical_columns
 
 
 import pandas as pd

@@ -4,7 +4,7 @@ sys.path.append("..")
 import pandas as pd
 import os
 from io import BytesIO
-from toolkit.data_analysis import read_csv_zip
+from ds11mltoolkit.data_analysis import read_csv_zip
 import zipfile
 
 

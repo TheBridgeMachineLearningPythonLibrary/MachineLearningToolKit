@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.plot import plot_cumulative_variance_ratio
+from ds11mltoolkit.plot import plot_cumulative_variance_ratio
 
 import pytest
 import numpy as np

@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.data_analysis import solver
+from ds11mltoolkit.data_analysis import solver
 import pytest
 
 

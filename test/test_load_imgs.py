@@ -2,7 +2,7 @@
 import sys
 sys.path.append("..")
 
-from toolkit.data_processing import load_imgs
+from ds11mltoolkit.data_processing import load_imgs
 
 
 import pandas as pd
