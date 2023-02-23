@@ -180,7 +180,6 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     
     ''' 
     Function to preprocess and clean a dataframe with text as a preliminary step for Natural Language Processing
-
     Parameters
     ----------
     - df: Dataframe
@@ -188,11 +187,11 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     - language: The language in which the text is written (str) in ENGLISH (e.g. 'spanish', 'english')
     - target: The name of the column in which the target to be predicted is located
     - filename: Name for the processed dataframe to be saved
-
     Returns
     ----------
     - df_processed: Dataframe after cleaning. It contains only the text variable and the target variable
     '''
+    stopwords_lang = set(stopwords.words(language))
 
     # Remove duplicated
     df.drop_duplicates(subset = column, inplace=True)
@@ -215,9 +214,8 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df[column] = df[column].apply(remove_links)
 
     # Remove stopwords
-    stopwords = set(stopwords.words(language))
     def remove_stopwords(df):
-        return " ".join([word for word in df.split() if word not in stopwords])
+        return " ".join([word for word in df.split() if word not in stopwords_lang])
     df[column] = df[column].apply(remove_stopwords)
 
     # Apply Stemmer
@@ -233,7 +231,6 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df_processed.to_csv(filename)
 
     return df_processed
-
 
 
 def load_imgs(path, im_size:int):
