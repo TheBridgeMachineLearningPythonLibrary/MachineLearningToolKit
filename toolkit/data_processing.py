@@ -249,7 +249,7 @@ def load_imgs(path, im_size:int):
                 filenames.append(file)
                 if file [-4:] == '.jpg' or file [-4:] == '.png':
                     # Read the image in color.
-                    image = imread(subdir + '\\' + file)
+                    image = imread(subdir + '/' + file)
                     # Resize the image.
                     smallimage = cv2.resize(image, (im_size, im_size)) 
                     # Save the images in the X variable.
