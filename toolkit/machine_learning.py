@@ -293,7 +293,7 @@ def image_scrap(url, n:int):
 			image_content = requests.get(url).content
 			image_file = io.BytesIO(image_content)
 			image = Image.open(image_file)
-			file_path = download_path + file_name
+			file_path = download_path + '/' + file_name
 
 			with open(file_path, "wb") as f:
 				image.save(f, "JPEG")
