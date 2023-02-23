@@ -10,6 +10,7 @@ import plotly.offline as py
 from wordcloud import STOPWORDS
 import plotly.express as px
 from sklearn.metrics import auc, roc_curve
+import folium
 
 
 def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFrame, np.ndarray], prediction_col: str = 'Top Prediction', label_col: str = 'Label'):
@@ -252,3 +253,78 @@ def plot_roc_curve(y_true, y_pred, pos_label=1, figsize=(8, 8)):
     plt.title('Receiver operating characteristic (ROC) curve')
     plt.legend(loc="lower right")
     plt.show()
+
+
+
+
+def plot_map(df, lat_col, lon_col, tooltip_col=None, zoom_start=3, map_type='OpenStreetMap'):
+    """
+    Function that creates an interactive map using folium from a dataframe with coordinates.
+    
+    Parameters
+    ----------
+        - df: dataframe with coordinates.
+        - lat_col: name of the column containing latitudes.
+        - lon_col: name of the column containing the longitudes.
+        - tooltip_col: (optional) name of the column containing the additional information to show in the tooltip of each marker.
+        - zoom_start: (optional) initial zoom level of the map.
+        - map_type: (optional) type of map to use. Possible values: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter'.
+    
+    Returns
+    -------
+        - map: folium Map object with the added markers
+
+    """
+    
+    # Create the map with the indicated type and zoom level.
+    map = folium.Map(location=[df[lat_col][0], df[lon_col][0]], zoom_start=zoom_start, tiles=map_type)
+
+    # Add markers for each point of the dataframe
+    for index, row in df.iterrows():
+        location = [row[lat_col], row[lon_col]]
+        tooltip = row[tooltip_col] if tooltip_col else None
+        folium.Marker(location=location, tooltip=tooltip).add_to(map)
+
+    # Return the map
+    return map
+
+
+def correl_map_max(dataframe):
+    """
+    Function that, given a dataframe, eliminates the correlations greater than 0.9, visualizes the correlations and returns a new dataframe with columns that meet the condition of being less than 0.9. 
+    and returns a new dataframe with the columns that meet the condition of being less than 0.9. 
+
+    Parameters
+    ----------
+        - DataFrame: set of the data to which you want to apply.
+
+    Returns
+    -------
+        - dataframe
+    """
+
+    # Calculate the correlation matrix
+    corr_matrix = dataframe.corr()
+
+    # Eliminate variables with correlation higher than 0.9
+    high_corr_vars = set()
+    for i in range(len(corr_matrix.columns)):
+        for j in range(i):
+            if abs(corr_matrix.iloc[i, j]) > 0.9:
+                varname_i = corr_matrix.columns[i]
+                varname_j = corr_matrix.columns[j]
+                if corr_matrix[varname_i].std() < corr_matrix[varname_j].std():
+                    high_corr_vars.add(varname_i)
+                else:
+                    high_corr_vars.add(varname_j)
+    dataframe = dataframe.drop(high_corr_vars, axis=1)
+
+    # Generate the visualization of the correlation map
+    sns.set(style="white")
+    f, ax = plt.subplots(figsize=(11, 9))
+    cmap = sns.diverging_palette(220, 10, as_cmap=True)
+    sns.heatmap(corr_matrix, cmap=cmap, vmax=.3, center=0,
+                square=True, annot=True, linewidths=.5, cbar_kws={"shrink": .5})
+    plt.show()
+
+    return dataframe
