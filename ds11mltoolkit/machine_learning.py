@@ -171,7 +171,7 @@ def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union
     # return the dataframe
     return model_predictions_df
 
-def quickregression(name):
+def quickregression(name, X_train, X_test, y_train, y_test):
     
     """
     Function to save time when doing Machine Learning models. 
