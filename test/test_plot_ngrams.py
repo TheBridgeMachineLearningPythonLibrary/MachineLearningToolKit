@@ -1,7 +1,7 @@
-from toolkit.data_processing import *
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import plot_ngrams
+from mltoolkit.data_processing import *
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import plot_ngrams
 
 import pandas as pd
 import numpy as np

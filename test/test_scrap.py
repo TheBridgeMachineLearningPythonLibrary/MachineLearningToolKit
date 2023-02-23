@@ -7,7 +7,7 @@ import os
 import time
 import io
 from PIL import Image
-from toolkit.machine_learning import image_scrap
+from mltoolkit.machine_learning import image_scrap
 import shutil
 
 

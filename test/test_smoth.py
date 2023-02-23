@@ -1,4 +1,8 @@
-from smoth import _exponential_smooth
+from mltoolkit.data_processing import buffdescribe
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
+
 import pandas as pd
 def test_exponential_smooth():
     # Define a sample dataset to test with

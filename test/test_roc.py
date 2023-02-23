@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from toolkit.plot import plot_roc_curve
+from mltoolkit.plot import plot_roc_curve
 
 @pytest.fixture()
 def binary_classification_data():

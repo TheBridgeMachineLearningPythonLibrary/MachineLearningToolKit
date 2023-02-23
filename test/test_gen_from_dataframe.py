@@ -1,4 +1,4 @@
-from toolkit.data_processing import ImageDataGen
+from mltoolkit.data_processing import ImageDataGen
 import pandas as pd
 
 dataframe = pd.read_csv('./image_data_gen_test_data/image_data_gen_test.csv')

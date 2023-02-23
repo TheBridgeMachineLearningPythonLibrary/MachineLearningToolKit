@@ -1,4 +1,4 @@
-from toolkit.machine_learning import predict_model_classification
+from mltoolkit.machine_learning import predict_model_classification
 
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd

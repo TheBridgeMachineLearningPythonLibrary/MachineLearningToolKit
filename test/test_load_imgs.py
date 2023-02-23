@@ -1,8 +1,8 @@
 # Importa la función a testear
-from toolkit.data_processing import load_imgs
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+from mltoolkit.data_processing import load_imgs
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 
 import pandas as pd
 import numpy as np

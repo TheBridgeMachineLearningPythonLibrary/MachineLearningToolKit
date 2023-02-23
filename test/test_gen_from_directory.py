@@ -1,4 +1,4 @@
-from toolkit.data_processing import ImageDataGen
+from mltoolkit.data_processing import ImageDataGen
 
 def test_gen_from_directory():
     max_image_count = 100

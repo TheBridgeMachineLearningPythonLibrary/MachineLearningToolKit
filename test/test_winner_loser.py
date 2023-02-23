@@ -1,4 +1,7 @@
-from winner_loser import winner_loser
+from mltoolkit.data_processing import buffdescribe
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 import pandas as pd
 import pytest
 

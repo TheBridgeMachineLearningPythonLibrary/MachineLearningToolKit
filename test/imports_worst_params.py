@@ -3,6 +3,10 @@ from numpy.ma import masked_array
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
+from mltoolkit.data_processing import buffdescribe
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 
 clf_cv_results = {'mean_fit_time': array([0.01718318, 0.0028271 , 0.38156233, 0.33234448, 0.35453713,
         0.00439863, 0.00284553, 0.00274587, 0.00266459, 0.00200651,

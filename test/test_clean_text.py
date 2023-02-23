@@ -1,10 +1,10 @@
 import pytest
 import pandas as pd
 
-from toolkit.data_processing import clean_text
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+from mltoolkit.data_processing import clean_text
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 
 @pytest.fixture
 

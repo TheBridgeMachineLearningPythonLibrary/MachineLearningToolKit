@@ -1,4 +1,4 @@
-from toolkit.machine_learning import show_scoring
+from mltoolkit.machine_learning import show_scoring
 import pandas as pd
 
 import pytest

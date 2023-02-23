@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from io import BytesIO
-from toolkit.data_analysis import read_csv_zip
+from mltoolkit.data_analysis import read_csv_zip
 import zipfile
 
 

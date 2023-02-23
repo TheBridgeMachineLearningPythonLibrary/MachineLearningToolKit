@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pytest
 
-from toolkit.data_processing import log_transform_data
+from mltoolkit.data_processing import log_transform_data
 
 
 def test_log_transform_data_ignore():

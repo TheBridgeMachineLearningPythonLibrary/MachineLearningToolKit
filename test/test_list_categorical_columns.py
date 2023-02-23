@@ -1,9 +1,9 @@
 
 
-from toolkit.data_processing import last_columndf, uniq_value,list_categorical_columns
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+from mltoolkit.data_processing import last_columndf, uniq_value,list_categorical_columns
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 
 import pandas as pd
 import numpy as pd

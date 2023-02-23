@@ -1,4 +1,4 @@
-from toolkit.machine_learning import quickregression
+from mltoolkit.machine_learning import quickregression
 
 from sklearn.linear_model import LinearRegression
 import pytest

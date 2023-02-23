@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
   name = 'mltoolkit',
   packages = ['mltoolkit'],
-  version = '0.1',
+  version = '1.0',
   license = 'MIT',
   description = 'Helper functions for all stages of the machine learning model building process',
   author = 'TheBridgeMachineLearningPythonLibrary',

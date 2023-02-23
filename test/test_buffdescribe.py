@@ -2,10 +2,10 @@
 import pandas as pd
 import pytest
 
-from toolkit.data_processing import buffdescribe
-from toolkit.data_analysis import *
-from toolkit.machine_learning import *
-from toolkit.plot import *
+from mltoolkit.data_processing import buffdescribe
+from mltoolkit.data_analysis import *
+from mltoolkit.machine_learning import *
+from mltoolkit.plot import *
 
 @pytest.fixture
 

@@ -1,4 +1,4 @@
-from toolkit.plot import wordcloudviz
+from mltoolkit.plot import wordcloudviz
 
 import pytest
 import matplotlib.pyplot as plt

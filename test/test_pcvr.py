@@ -1,4 +1,4 @@
-from toolkit.plot import plot_cumulative_variance_ratio
+from mltoolkit.plot import plot_cumulative_variance_ratio
 
 import pytest
 import numpy as np

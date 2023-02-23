@@ -1,5 +1,5 @@
 import pandas as pd
-from toolkit.data_processing import convert_to_numeric
+from mltoolkit.data_processing import convert_to_numeric
 
 def test_convert_to_numeric():
     
