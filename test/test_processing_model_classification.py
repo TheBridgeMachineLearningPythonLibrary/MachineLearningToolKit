@@ -29,21 +29,10 @@ def test_processing_model_classification():
     model_r, X_train_r, X_test_r, y_train_r, y_test_r, y_pred_train_r, y_pred_test_r = processing_model_classification(model, X, y, test_size_split=0.20, shuffle_split=True, 
                                                                                                          random_state_split=32, standardScaler=False, train_score=True, test_score=False)
 
-    assert model_r == model
-    assert X_train_r == X_train
-    assert X_test_r == X_test
-    assert y_train_r == y_train
-    assert y_test_r == y_test
+    assert str(model_r) == str(model)
+    assert X_train_r.equal(X_train)
+    assert X_test_r.equal(X_test)
+    assert y_train_r.equal(y_train)
+    assert y_test_r.equal(y_test)
     assert y_pred_train_r == y_pred_train
     assert y_pred_test_r == y_pred_test
-
-    # assert isinstance(model_r, model)
-    # assert isinstance(X_train_r, X_train)
-    # assert isinstance(X_test_r, X_test)
-    # assert isinstance(y_train_r, y_train)
-    # assert isinstance(y_test_r, y_test)
-    # assert isinstance(y_pred_train_r, y_pred_train)
-    # assert isinstance(y_pred_test_r, y_pred_test)
-
-    # assert processing_model_classification(model, X, y, test_size_split=0.20, shuffle_split=True, standardScaler=False, 
-    #                                        train_score=True, test_score=False) == model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test
