@@ -2,7 +2,7 @@ Welcome to ds11mltoolkit, we are delighted to see you here!
 
 Thank you for your interest, and we hope this library can help you in your daily life as a **Data Scientist**
 
-<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/logo.jpg)</center>
+<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/logo.jpg?raw=true)</center>
 
 [![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-TheBridge-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://www.thebridge.tech/) ![Powered by NumFOCUS](https://img.shields.io/badge/Contributors-13-orange.svg?style=flat&colorA=E1523D&colorB=007D8A) ![PyPI](https://img.shields.io/pypi/v/ds11mltoolkit.svg)
 
@@ -70,39 +70,51 @@ In the current version, ds11mltoolkit will provide users around 40 functions, di
 
 ## Data visualisation and exploration
 
-* plot_multiclass_prediction_image
-* plot_ngrams
+* heatmap
 * sunburst
+* correl_map_max
+* plot_map
+* plot_ngram
 * wordcloudviz
 * plot_cumulative_variance_ratio
-* heatmap
+* plot_roc_cruve
+* plot_multiclass_prediction_image
 
 ## Data processing
 
-* extract_date
 * list_categorical_columns
+* last_columns
 * uniq_value
-* last_columndf
-* log_transform_data
-* buffdescribe
-* clean_text
 * load_imgs
-* convert_to_numeric
-* exponential_smooth
+* class ImageDataGen(ImageDataGenerator) 3-in-1 functions
+* clean_text
+* processing_model_classification
+* replace_convert_numeric
+* log_transform_numeric
 * add_previous
+* _exponential_smooth
+* Nan treatment
+* convert_to_numeric
+* auto_dtype_converter
 * winner_loser
-
+* lstm_model
 
 ## Machine Learning
 
-* balance_binary_target
-* ignore_columns_polyfeatures
-* create_multiclass_prediction_df
-* quick_regression
-* load_model_zip
-* image_scrap
-* get_images_from_google
+* export_model
+* import_model
 * worst_params
+* load_model_zip
+* quickregression
+* polynomial_features_non_binary
+* balance_binary_target
+* image_scrap
+* create_multiclass_prediction_df
+* show_scoring
+* predict_model_classification
+* Unsupervised KMeans
+* UnsupervisedPCA
+
 
 ## Quick example
 
@@ -145,7 +157,7 @@ output: ['Cities', 'Teams', 'Players']
 
 ## Github framework
 
-<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/diagrama.png)</center>
+<center>![Logotipo](https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/blob/dev/assets/diagrama.png?raw=true)</center>
 
 ## Contributors
 
