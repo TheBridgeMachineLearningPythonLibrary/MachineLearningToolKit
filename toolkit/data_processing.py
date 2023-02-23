@@ -382,7 +382,7 @@ class ImageDataGen(ImageDataGenerator):
         shuffle=True,
         sample_weight=None,
         seed=None,
-        save_to_dir='./aug',
+        save_to_dir=None,
         save_prefix='',
         save_format='png',
         ignore_class_split=False,

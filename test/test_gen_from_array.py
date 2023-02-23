@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from toolkit.data_processing import ImageDataGen
 import numpy as np
 

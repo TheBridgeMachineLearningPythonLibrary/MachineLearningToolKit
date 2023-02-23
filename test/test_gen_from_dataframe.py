@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from toolkit.data_processing import ImageDataGen
 import pandas as pd
 
@@ -13,7 +15,7 @@ def test_gen_from_dataframe():
         y_col='label',
         max_image_count=max_image_count,
         batch_size=1,
-        save_to_dir='./image_data_gen_test_data/aug'
+        save_to_dir='./image_data_gen_test_data/image_data_gen_test_generated/'
     )
     
     assert len(generator) == 165
