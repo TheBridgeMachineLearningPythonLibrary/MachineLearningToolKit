@@ -819,3 +819,39 @@ class ImageDataGen(ImageDataGenerator):
                 images_generated += batch_size
 
         return generator
+    
+def Nantreatment(data, replace=True, replace_value='None', replace_numeric_with_mean=False):
+    '''
+    Function:
+    -----------
+    This function works with the Nan's inside of a DataFrame, wich give you diferents option when you try to work with them
+
+    Parameters:
+    -----------
+    data: Pandas DataFrame
+        Data that the function is going to analyze 
+    replace: bool
+        Depends if its True or False, True gives you the Nan replace by a zero or the mean if the column is a number
+        and None if the column is an object,in case that replace is False, drops all the Nan's in the DataFrame
+    replace_numeric_with_mean: bool
+        choose if you want to Nan with 0 or with the mean
+    
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns a copy of the input DataFrame with NaN values replaced or dropped.
+    '''
+
+
+    if replace:
+        if replace_numeric_with_mean:
+            data = data.fillna(value=data.mean())
+        else:
+            for name in data.select_dtypes(include=[np.number]):
+                data[name] = data[name].fillna(value=0)
+        for name in data.select_dtypes(include=[object]):
+            data[name] = data[name].fillna(replace_value)
+    else:
+        data = data.dropna()
+    
+    return data.reset_index(drop=True)
