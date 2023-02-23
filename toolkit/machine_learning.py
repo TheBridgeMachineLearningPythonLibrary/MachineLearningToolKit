@@ -20,6 +20,21 @@ from PIL import Image
 import pickle
 
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+
+from sklearn.decomposition import PCA
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import scale
+
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
+
+
+
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
     """
     This function balances a target binary variable of a dataframe using different oversampling strategies.
@@ -278,7 +293,7 @@ def image_scrap(url, n:int):
 			image_content = requests.get(url).content
 			image_file = io.BytesIO(image_content)
 			image = Image.open(image_file)
-			file_path = download_path + file_name
+			file_path = download_path + '/' + file_name
 
 			with open(file_path, "wb") as f:
 				image.save(f, "JPEG")
@@ -650,5 +665,154 @@ def import_model(dir_model:str, name_model:str):
     
     except: 
         print('Something went wrong')
+
+def UnsupervisedCluster(df,motive='analisys', Range=20,k=3):
+
+
+    '''
+    
+    Function:
+    -----------
+
+    This function works with the unsupervised model of Kmeans, and its objective is to show you how depending the number of 
+    clusters that you want the inertia and the silhouette score are going to go up or down to facilitate your choose oof k, and also
+    have the model of Kmeans to see thoose clusters.
+    
+
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    motive: str
+        Depend in wich word you use the function is going to ralize different things, for example 'Analysis' show you 2 graphs 
+        and 'clustering' give you in wich cluster is every target
+    Range: int
+        Range of k's that are in the graph showing the inertia and the silhouette score for each one of them
+    K: int
+        number that indicates how much clusters do you want in the modeling of Kmeans
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns a dataframe with an aditional column wich have in wich cluster each target is in
+
+
+    '''
+
+    if motive=='analisys':
+        km_list = [KMeans(n_clusters=a, random_state=42).fit(df) for a in range(2,Range)]
+        inertias = [model.inertia_ for model in km_list]
+        silhouette_score_list = [silhouette_score(df, model.labels_) for model in km_list]
+
+        plt.figure(figsize=(20,5))
+
+        plt.subplot(121)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), inertias)
+        plt.xlabel('k')
+        plt.ylabel("inertias")
+        sns.despine()
+
+        plt.subplot(122)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), silhouette_score_list)
+        plt.xlabel('k')
+        plt.ylabel("silhouette_score")
+        sns.despine()
+
+    if motive =='clustering':
+        kmeans = KMeans(n_clusters=k,n_init=10, random_state=42).fit(df)
+        df_clusters = pd.DataFrame(kmeans.labels_, columns=['Cluster'])
+        return df_clusters
+   
+
+               
+def UnsupervisedDR(df, Acumulative_variance=0.85):
+    '''
+    Function:
+    -----------
+    This function works with the unsupervised model of PCA, and its objective is to give you de minimun
+    principal components to satisfy the acumulative variance of your choice, you also can choose the number 
+    of PC's that the model is going to work with.
+    Its recomendable that the Nc is a number near to the number of varibles
+
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    Acumulative_variance: float, default=0.85
+        Number that indicates how much you want to keep from the original principal components. 
+        Should be a value between 0.0 and 1.0.
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns the original data set with the values changed because of the dimensional reduction.
+    '''
+    pca = make_pipeline(StandardScaler(), PCA(n_components=len(df.columns)))
+    pca.fit(df)
+    pca_model = pca.named_steps['pca']
+    variance_ratio_cumsum = np.cumsum(pca_model.explained_variance_ratio_)
+    min_var_explained = Acumulative_variance
+    min_num_components = 0
+    for i, variance_ratio in enumerate(variance_ratio_cumsum):
+        if (variance_ratio < min_var_explained).any():
+            min_num_components += 1
+        else:
+            break
+    min_num_components += 1
+    columnas = ['PC{}'.format(i+1) for i in range(min_num_components)]
+    pca_pipe = make_pipeline(StandardScaler(), PCA(n_components=min_num_components))
+    modelo_pca = pca_pipe['pca']
+    proyecciones = pca_pipe.fit_transform(X=df)
+    proyecciones = pd.DataFrame(
+        proyecciones,
+        columns = columnas,
+        index   = df.index
+    )
+    proyecciones = np.dot(modelo_pca.components_, scale(df).T)
+    proyecciones = pd.DataFrame(proyecciones, index =columnas)
+    proyecciones = proyecciones.transpose().set_index(df.index)
+    modelo_pca = pca_pipe['pca']
+    reconstruccion = pca_pipe.inverse_transform(proyecciones)
+    reconstruccion = pd.DataFrame(
+        reconstruccion,
+        columns = df.columns,
+    ).set_index(df.index)
+    return reconstruccion
+
+
+
+# Standard model of a neural network LSTM
+def lstm_model(input_shape, lstm_units, dense_units, output_shape):
+    """
+    Function of a standard LSTM type neural network model. 
+    The output layer has "sigmoid" activation so it is remixed in classification applications.
+    
+    Parameters
+    ----------
+        - input_shape: The input shape for the neural network. It is a tuple that specifies the shape of the input data (e.g., (timesteps, features)).
+        - lstm_units: The number of units in the LSTM layer.
+        - dense_units: The number of units in the dense layer.
+        - output_shape: The output shape for the neural network. It is a number that specifies the number of output classes or values (0,1).
+
+    Return
+    ------
+        - model
+    """
+    # Define the sequential model
+    model = Sequential()
+
+    # Add a LSTM layer with the specified number of units and the input form
+    model.add(LSTM(units=lstm_units, input_shape=input_shape))
+
+    # Add a dense layer with the specified number of units.
+    model.add(Dense(units=dense_units))
+
+    # Add an output layer with the specified shape
+    model.add(Dense(units=output_shape, activation='sigmoid'))
+
+    # Compile the model
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    return model
 
 

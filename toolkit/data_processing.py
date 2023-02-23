@@ -48,11 +48,12 @@ def uniq_value(list_values:list):
     ----------
     unique: list of unique values
     '''
+
     unique = []
     for i in list_values:
         if i not in unique:
-            unique.extend(list_values)
-    return unique
+            unique.append(i)
+        return unique
 
 def last_columndf(df,feature):
     '''
@@ -160,7 +161,6 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     
     ''' 
     Function to preprocess and clean a dataframe with text as a preliminary step for Natural Language Processing
-
     Parameters
     ----------
     - df: Dataframe
@@ -168,11 +168,11 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     - language: The language in which the text is written (str) in ENGLISH (e.g. 'spanish', 'english')
     - target: The name of the column in which the target to be predicted is located
     - filename: Name for the processed dataframe to be saved
-
     Returns
     ----------
     - df_processed: Dataframe after cleaning. It contains only the text variable and the target variable
     '''
+    stopwords_lang = set(stopwords.words(language))
 
     # Remove duplicated
     df.drop_duplicates(subset = column, inplace=True)
@@ -195,9 +195,8 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df[column] = df[column].apply(remove_links)
 
     # Remove stopwords
-    stopwords = set(stopwords.words(language))
     def remove_stopwords(df):
-        return " ".join([word for word in df.split() if word not in stopwords])
+        return " ".join([word for word in df.split() if word not in stopwords_lang])
     df[column] = df[column].apply(remove_stopwords)
 
     # Apply Stemmer
@@ -213,7 +212,6 @@ def clean_text(df, column:str, language:str, target:str, filename:str='data_proc
     df_processed.to_csv(filename)
 
     return df_processed
-
 
 
 def load_imgs(path, im_size:int):
@@ -252,7 +250,7 @@ def load_imgs(path, im_size:int):
                 filenames.append(file)
                 if file [-4:] == '.jpg' or file [-4:] == '.png':
                     # Read the image in color.
-                    image = imread(subdir + '\\' + file)
+                    image = imread(subdir + '/' + file)
                     # Resize the image.
                     smallimage = cv2.resize(image, (im_size, im_size)) 
                     # Save the images in the X variable.
@@ -385,7 +383,7 @@ class ImageDataGen(ImageDataGenerator):
         shuffle=True,
         sample_weight=None,
         seed=None,
-        save_to_dir='./aug',
+        save_to_dir=None,
         save_prefix='',
         save_format='png',
         ignore_class_split=False,
@@ -819,3 +817,39 @@ class ImageDataGen(ImageDataGenerator):
                 images_generated += batch_size
 
         return generator
+    
+def Nantreatment(data, replace=True, replace_value='None', replace_numeric_with_mean=False):
+    '''
+    Function:
+    -----------
+    This function works with the Nan's inside of a DataFrame, wich give you diferents option when you try to work with them
+
+    Parameters:
+    -----------
+    data: Pandas DataFrame
+        Data that the function is going to analyze 
+    replace: bool
+        Depends if its True or False, True gives you the Nan replace by a zero or the mean if the column is a number
+        and None if the column is an object,in case that replace is False, drops all the Nan's in the DataFrame
+    replace_numeric_with_mean: bool
+        choose if you want to Nan with 0 or with the mean
+    
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns a copy of the input DataFrame with NaN values replaced or dropped.
+    '''
+
+
+    if replace:
+        if replace_numeric_with_mean:
+            data = data.fillna(value=data.mean())
+        else:
+            for name in data.select_dtypes(include=[np.number]):
+                data[name] = data[name].fillna(value=0)
+        for name in data.select_dtypes(include=[object]):
+            data[name] = data[name].fillna(replace_value)
+    else:
+        data = data.dropna()
+    
+    return data.reset_index(drop=True)

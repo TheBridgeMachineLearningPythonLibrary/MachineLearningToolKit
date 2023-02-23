@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from toolkit.data_processing import ImageDataGen
 
 def test_gen_from_directory():
@@ -5,10 +7,10 @@ def test_gen_from_directory():
 
     datagen = ImageDataGen()
     generator = datagen.gen_from_directory(
-        './image_data_gen_test_data/',
+        './image_data_gen_test_data/images',
         max_image_count=max_image_count,
         batch_size=1,
-        save_to_dir='./image_data_gen_test_data/aug'
+        save_to_dir='./image_data_gen_test_data/image_data_gen_test_generated/'
     )
 
     assert len(generator) == 165
