@@ -337,9 +337,9 @@ def worst_params(gridsearch):
     gridsearch: trained gridsearch
 
     '''
-    position = list(gridsearch['rank_test_score']).index(gridsearch['rank_test_score'].max())
-    worst_params = gridsearch['params'][position]
-    worst_scoring = gridsearch['mean_test_score'][position]
+    position = list(gridsearch.cv_results_['rank_test_score']).index(gridsearch.cv_results_['rank_test_score'].max())
+    worst_params = gridsearch.cv_results_['params'][position]
+    worst_scoring = gridsearch.cv_results_['mean_test_score'][position]
 
     return str(worst_params), worst_scoring
 
