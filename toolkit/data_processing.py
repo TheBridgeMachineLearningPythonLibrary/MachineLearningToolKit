@@ -50,7 +50,7 @@ def uniq_value(list_values:list):
     '''
 
     unique = []
-    for i in list:
+    for i in list_values:
         if i not in unique:
             unique.append(i)
         return unique
