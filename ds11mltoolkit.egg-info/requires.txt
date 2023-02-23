@@ -1,0 +1,16 @@
+pandas
+scipy
+nltk
+opencv-python-headless
+scikit-image
+keras
+imblearn
+scikit-learn
+selenium
+requests
+beautifulsoup4
+Pillow
+matplotlib
+seaborn
+plotly
+wordcloud
