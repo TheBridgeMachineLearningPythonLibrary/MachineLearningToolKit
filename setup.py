@@ -9,7 +9,7 @@ setup(
   author = 'TheBridgeMachineLearningPythonLibrary',
   author_email = 'seenstevol@protonmail.com',
   url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit',
-  download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_01.tar.gz',
+  download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/V_1.tar.gz',
   keywords = ['machine learning', 'data visualization', 'data processing', 'sklearn', 'pandas'],
   install_requires=[
           'pandas',
