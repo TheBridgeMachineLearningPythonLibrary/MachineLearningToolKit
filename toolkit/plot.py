@@ -9,6 +9,7 @@ from collections import defaultdict
 import plotly.offline as py
 from wordcloud import STOPWORDS
 import plotly.express as px
+from sklearn.metrics import auc, roc_curve
 
 
 def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFrame, np.ndarray], prediction_col: str = 'Top Prediction', label_col: str = 'Label'):
