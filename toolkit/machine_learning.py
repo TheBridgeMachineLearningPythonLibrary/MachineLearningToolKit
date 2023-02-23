@@ -1,8 +1,36 @@
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN
-from sklearn.preprocessing import PolynomialFeatures
+
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, roc_curve, auc, roc_auc_score, confusion_matrix
+
 import pandas as pd
 import numpy as np
+
 from typing import List, Union
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+import requests
+from bs4 import BeautifulSoup
+import os
+from datetime import datetime
+import time
+import io
+from PIL import Image
+import pickle
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+
+from sklearn.decomposition import PCA
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import scale
+
+
 
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
     """
@@ -169,3 +197,581 @@ def quickregression(name):
     print("MSE test:", mean_squared_error(y_test, modpred))
     print("RMSE test:", np.sqrt(mean_squared_error(y_test, modpred)))
     return(model.score(X_train, y_train))
+
+
+def load_model_zip(zip_file, model_file):
+    import pickle
+    import zipfile
+    """
+    Uploads a model file from a zip file.
+
+    Parameters
+    ----------
+         zip_file: The name of the zip file where the model file is located.
+         model_file: The name of the model file to load.
+
+    Returns:
+    ----------
+         The model loaded from the file.
+    """
+    # Abre el archivo zip en modo lectura
+    with zipfile.ZipFile(zip_file, "r") as zip:
+        # Lee el archivo de modelo del zip y lo carga en la memoria
+        with zip.open(model_file, "r") as file:
+            model = pickle.load(file)
+
+    return model
+
+def image_scrap(url, n:int):
+	'''
+	Function to scrap chrome images and get n images we want, and it create a new folder as 'my_images'.
+
+	As we know, we are using selenium, we will need a driver in Chrome.
+	Must have driver from Chrome to run it [chrome](https://chromedriver.chromium.org/), file name = 'chromedriver' and dowload in the same path as the scrip or jupyter. 
+
+	Parameters
+	----------
+	url -> chrome images web link, must be all way long.
+
+	n -> number of images you want to have in the folder. Must be 'int'
+	
+	Return
+	----------
+
+	Folder called 'my_images' with n images, where you can show as much time as you want
+	
+	'''
+	current_dir = os.getcwd()
+	driver_path = os.path.join(current_dir, "chromedriver.exe")
+
+	wd = webdriver.Chrome(driver_path)
+
+	def get_images_from_google(url, wd, delay, max_images):
+		def scroll_down(wd):
+			wd.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+			time.sleep(delay)
+
+		url = url
+		wd.get(url)
+
+		loadMore = wd.find_element(By.XPATH, '/html/body/c-wiz/div/div/div/div[2]/div/div[3]/div/div/form/div/div/button').click()
+
+		image_urls = set()
+		skips = 0
+
+		while len(image_urls) + skips < max_images:
+			scroll_down(wd)
+
+			thumbnails = wd.find_elements(By.CLASS_NAME, "Q4LuWd")
+
+			for img in thumbnails[len(image_urls) + skips:max_images]:
+				try:
+					img.click()
+					time.sleep(delay)
+				except:
+					continue
+
+				images = wd.find_elements(By.CLASS_NAME, "n3VNCb")
+				for image in images:
+					if image.get_attribute('src') in image_urls:
+						max_images += 1
+						skips += 1
+						break
+
+					if image.get_attribute('src') and 'http' in image.get_attribute('src'):
+						image_urls.add(image.get_attribute('src'))
+						print(f"Found {len(image_urls)}")
+
+		return image_urls
+
+
+	def download_image(download_path, url, file_name):
+		try:
+			image_content = requests.get(url).content
+			image_file = io.BytesIO(image_content)
+			image = Image.open(image_file)
+			file_path = download_path + file_name
+
+			with open(file_path, "wb") as f:
+				image.save(f, "JPEG")
+
+			print("Success")
+		except Exception as e:
+			print('FAILED -', e)
+
+
+	urls = get_images_from_google(url,wd, 1, n)
+	
+	
+	current_dir = os.path.dirname(os.path.abspath(__file__))
+
+	download_dir = os.path.join(current_dir, "my_images")
+	
+
+	if not os.path.exists(download_dir):
+		os.makedirs(download_dir)
+
+	for i, url in enumerate(urls):
+			download_image(download_dir, url, str(i) + ".jpg")
+
+	wd.quit()
+
+
+def worst_params(gridsearch):
+    '''
+    Function to obtain the worst params of a gridsearch. In case we need to train a gridsearch multiple times,
+    it can be useful to know which parameters are likely to be deleted, in order to make our training faster.
+
+    Args:
+    gridsearch: trained gridsearch
+
+    '''
+    position = list(gridsearch['rank_test_score']).index(gridsearch['rank_test_score'].max())
+    worst_params = gridsearch['params'][position]
+    worst_scoring = gridsearch['mean_test_score'][position]
+
+    return str(worst_params), worst_scoring
+
+
+# Function to calculate a prediction score
+def show_scoring(y, y_prediction, label:str, round:int=3, auc_sc:bool=True, roc_auc_sc:bool=True, confusion_matrix_sc:bool=True):
+    '''
+    Function to calculate a prediction score
+
+    Parameters
+    ----------
+        y: target values.
+        
+        y_prediction: prediction values.
+
+        label: value type label.
+
+        round: value rounding.
+
+        auc_sc: compute Area Under the Curve (AUC) using the trapezoidal rule.
+
+        roc_auc_sc: compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
+
+        confusion_matrix_sc: compute confusion matrix to evaluate the accuracy of a classification.
+
+    Return
+    ------
+        dict(accu --> accuracy_score, 
+            auc_s --> roc_curve.auc, 
+            roc_auc --> roc_auc_score, 
+            conf_mat --> confusion_matrix)
+    '''
+    try:
+        auc_r = None
+        roc_auc_r = None
+        conf_mat_r = None
+
+        print('-'*30)
+
+        accu_r = accuracy_score(y, y_prediction).round(round)
+        print('ACCURACY',label,':',accu_r)
+
+        if auc_sc:
+            fpr, tpr, thresh = roc_curve(y, y_prediction)
+            auc_r = auc(fpr, tpr).round(round)
+            print('AUC',label,':',auc_r)
+
+        if roc_auc_sc:
+            roc_auc_r = roc_auc_score(y, y_prediction).round(round)
+            print('ROC AUC',label,':',roc_auc_r)
+        
+        if confusion_matrix_sc:
+            c_mat = confusion_matrix(y, y_prediction, normalize='true')
+            conf_mat_r = c_mat.round(round)
+            print('CONFUSION MATRIX',label,':',conf_mat_r)
+
+        print('-'*30)
+
+        return dict(accu_r=accu_r, auc_r=auc_r, roc_auc_r=roc_auc_r, conf_mat_r=conf_mat_r)
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to train and predict the model with a classification algorithm
+def processing_model_classification(model:object, x, y, test_size_split:float=0.25, shuffle_split:bool=False, random_state_split:int=None, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, train_score:bool=False, test_score:bool=True):
+    '''
+    Function to train and predict the model with a classification algorithm
+
+    Parameters
+    ----------
+        model: algorithm / model.
+        x: {array-like, sparse matrix} of shape (n_samples, n_features).
+            training data.
+
+        y: {array-like, sparse matrix} of shape (n_samples,).
+            target values.
+
+        test_size_split: if float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test split. 
+            If int, represents the absolute number of test samples. If None, it will be set to 0.25.
+
+        shuffle_split: whether or not to shuffle the data before splitting.
+
+        minMaxScaler: whether or not to transform features by scaling each feature to a given range.
+
+        minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
+
+        standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
+
+        train_score: compute the score of train.
+
+        test_score: compute the score of test.
+
+    Return
+    ------
+        model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test
+    '''
+    try:
+        # Split Train and Test
+        if random_state_split == None:
+            X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=test_size_split, shuffle=shuffle_split)
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=test_size_split, shuffle=shuffle_split, random_state=random_state_split)
+
+        # Number of rows to be processed
+        print('-'*30)
+        print('Rows to process for Train:', len(X_train))
+        print('Rows to process for Test:', len(X_test))
+        print('-'*30)
+
+        # Data scaling - MinMaxScaler()
+        if minMaxScaler:
+            X_train = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_train)
+            X_test = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_test)
+
+        # Data scaling - StandardScaler()
+        if standardScaler:
+            X_train = StandardScaler().fit_transform(X_train)
+            X_test = StandardScaler().fit_transform(X_test)
+
+        # Training the model
+        model.fit(X_train, y_train)
+
+        # Model prediction with Train
+        y_pred_train = model.predict(X_train)
+
+        # Model prediction with Test
+        y_pred_test = model.predict(X_test)
+
+        # Return the mean accuracy on the given train data and labels
+        print('SCORE TRAIN:',model.score(X_train, y_train).round(3))
+
+        # Compute the score of Train
+        if train_score:
+            show_scoring(y_train, y_pred_train, 'TRAIN', 3)
+
+        # Compute the score of Test
+        if test_score:
+            show_scoring(y_test, y_pred_test, 'TEST', 3)
+
+        return model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test # return model, X_test, y_test, y_pred_test
+    
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to predict the model with a classification algorithm
+def predict_model_classification(model:object, X_test, y_test, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, test_score:bool=True):
+    '''
+    Function to predict the model with a classification algorithm
+
+    Parameters
+    ----------
+        model: algorithm / model.
+
+        X_test: {array-like, sparse matrix} of shape (n_samples, n_features).
+            training data.
+
+        y_test: {array-like, sparse matrix} of shape (n_samples,).
+            target values.
+
+        minMaxScaler: whether or not to transform features by scaling each feature to a given range.
+
+        minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
+
+        standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
+
+        test_score: calculates the score of test
+        
+    Return
+    ------
+        X_test, y_pred_test
+    '''
+    try:
+        # Data scaling - MinMaxScaler()
+        if minMaxScaler:
+            X_test = MinMaxScaler(feature_range=minMaxScaler_range).fit_transform(X_test)
+
+        # Data scaling - StandardScaler()
+        if standardScaler:
+            X_test = StandardScaler().fit_transform(X_test)
+
+        # Model prediction with Test
+        y_pred_test = model.predict(X_test)
+
+        # Compute the score of Test
+        if test_score:
+            show_scoring(y_test, y_pred_test, 'TEST', 3)
+
+        return X_test, y_pred_test
+    
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to export a model
+def export_model(model:object, dir_model:str, name_model:str, timestamp:bool=False):
+    '''
+    Function to export a model
+
+    Parameters
+    ----------
+        model: algorithm / model we want to save.
+
+        dir_model: directory to save the model.
+
+        name_model: name of the model to save.
+        
+        timestamp: time stamp to rename the model.
+    '''
+    try:
+        # Format the current date and time for the renaming of the file to be exported
+        if timestamp:
+            now = datetime.now()
+            year = now.strftime('%Y')[2:]
+            timestamp = '_' + year + now.strftime('%m%d%H%M%S')
+        else:
+            timestamp = ''
+
+        # Export the model with the renamed model to the specified directory
+        filename = os.path.join(dir_model, name_model + timestamp)
+        with open(filename, 'wb') as archivo:
+            pickle.dump(model, archivo)
+
+        # Show info
+        print('-'*46)
+        print('Model saved at', dir_model)
+        print('-'*46)
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+
+# Function to import a model
+def import_model(dir_model:str, name_model:str):
+    '''
+    Function to import a model
+
+    Parameters
+    ----------
+        dir_model: directory to import the model.
+        
+        name_model: name of the model to be imported.
+    
+    Return
+    ------
+        model_import: algorithm / model we have saved.
+    '''
+    try:
+        # Import the model
+        filename = os.path.join(dir_model, name_model)
+        with open(filename, 'rb') as archivo:
+            model_import = pickle.load(archivo)
+
+        return model_import
+
+    except SyntaxError:
+        print('Fix your syntax')
+
+    except TypeError:
+        print('Oh no! A TypeError has occured')
+        
+    except ValueError:
+        print('A ValueError occured!')
+
+    except OSError as err:
+        print('OS error:', err)
+
+    except Exception as err:
+        print(f'Unexpected {err}, {type(err)}')
+    
+    except: 
+        print('Something went wrong')
+
+def UnsupervisedCluster(df,motive='analisys', Range=20,k=3):
+
+
+    '''
+    
+    Function:
+    -----------
+
+    This function works with the unsupervised model of Kmeans, and its objective is to show you how depending the number of 
+    clusters that you want the inertia and the silhouette score are going to go up or down to facilitate your choose oof k, and also
+    have the model of Kmeans to see thoose clusters.
+    
+
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    motive: str
+        Depend in wich word you use the function is going to ralize different things, for example 'Analysis' show you 2 graphs 
+        and 'clustering' give you in wich cluster is every target
+    Range: int
+        Range of k's that are in the graph showing the inertia and the silhouette score for each one of them
+    K: int
+        number that indicates how much clusters do you want in the modeling of Kmeans
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns a dataframe with an aditional column wich have in wich cluster each target is in
+
+
+    '''
+
+    if motive=='analisys':
+        km_list = [KMeans(n_clusters=a, random_state=42).fit(df) for a in range(2,Range)]
+        inertias = [model.inertia_ for model in km_list]
+        silhouette_score_list = [silhouette_score(df, model.labels_) for model in km_list]
+
+        plt.figure(figsize=(20,5))
+
+        plt.subplot(121)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), inertias)
+        plt.xlabel('k')
+        plt.ylabel("inertias")
+        sns.despine()
+
+        plt.subplot(122)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), silhouette_score_list)
+        plt.xlabel('k')
+        plt.ylabel("silhouette_score")
+        sns.despine()
+
+    if motive =='clustering':
+        kmeans = KMeans(n_clusters=k,n_init=10, random_state=42).fit(df)
+        df_clusters = pd.DataFrame(kmeans.labels_, columns=['Cluster'])
+        return df_clusters
+   
+
+               
+def UnsupervisedDR(df, Acumulative_variance=0.85):
+    '''
+    Function:
+    -----------
+    This function works with the unsupervised model of PCA, and its objective is to give you de minimun
+    principal components to satisfy the acumulative variance of your choice, you also can choose the number 
+    of PC's that the model is going to work with.
+    Its recomendable that the Nc is a number near to the number of varibles
+
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    Acumulative_variance: float, default=0.85
+        Number that indicates how much you want to keep from the original principal components. 
+        Should be a value between 0.0 and 1.0.
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns the original data set with the values changed because of the dimensional reduction.
+    '''
+    pca = make_pipeline(StandardScaler(), PCA(n_components=len(df.columns)))
+    pca.fit(df)
+    pca_model = pca.named_steps['pca']
+    variance_ratio_cumsum = np.cumsum(pca_model.explained_variance_ratio_)
+    min_var_explained = Acumulative_variance
+    min_num_components = 0
+    for i, variance_ratio in enumerate(variance_ratio_cumsum):
+        if (variance_ratio < min_var_explained).any():
+            min_num_components += 1
+        else:
+            break
+    min_num_components += 1
+    columnas = ['PC{}'.format(i+1) for i in range(min_num_components)]
+    pca_pipe = make_pipeline(StandardScaler(), PCA(n_components=min_num_components))
+    modelo_pca = pca_pipe['pca']
+    proyecciones = pca_pipe.fit_transform(X=df)
+    proyecciones = pd.DataFrame(
+        proyecciones,
+        columns = columnas,
+        index   = df.index
+    )
+    proyecciones = np.dot(modelo_pca.components_, scale(df).T)
+    proyecciones = pd.DataFrame(proyecciones, index =columnas)
+    proyecciones = proyecciones.transpose().set_index(df.index)
+    modelo_pca = pca_pipe['pca']
+    reconstruccion = pca_pipe.inverse_transform(proyecciones)
+    reconstruccion = pd.DataFrame(
+        reconstruccion,
+        columns = df.columns,
+    ).set_index(df.index)
+    return reconstruccion

@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
 import pandas as pd
 import numpy as np
 from typing import Union
@@ -8,6 +9,7 @@ from collections import defaultdict
 import plotly.offline as py
 from wordcloud import STOPWORDS
 import plotly.express as px
+from sklearn.metrics import auc, roc_curve
 
 
 def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFrame, np.ndarray], prediction_col: str = 'Top Prediction', label_col: str = 'Label'):
@@ -113,10 +115,9 @@ def plot_ngrams(df, target:str, text:str, n_gram:int):
     fig['layout'].update(height=1200, width=900, paper_bgcolor='rgb(233,233,233)', title="Word Count Plots")
     py.iplot(fig, filename='word-plots')
 
-<<<<<<< HEAD
     return fig
+    
 
-=======
 def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     '''
     This is a Plotly Graph similar to pie chart but with two levels, interior is for columns which have one or two unique values, and 
@@ -140,7 +141,7 @@ def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     fig = go.Figure()
     fig = px.sunburst(df, path=[interior, exterior], values=col_num, template = 'plotly_dark')
     fig.update_layout(width=800, height=600, title = title)
-    fig.show()
+    return fig
 
 def wordcloudviz(column):
     import matplotlib.pyplot as plt
@@ -168,4 +169,86 @@ def wordcloudviz(column):
     plt.axis("off")
     plt.tight_layout(pad=0)
     plt.show()
->>>>>>> 0f8d8abe7a26aac02e768b21b22a1d2e58bd6d30
+ 
+def plot_cumulative_variance_ratio(pca, n_features):
+
+    '''
+    Function to visually represent the percentage of variance explained by each PCA component
+
+    Parameters =
+
+    pca: Name of the variable assigned to the PCA
+    n_features: Number of PCA components
+
+    Returns: 
+    Matplotlib lineplot of the variance explained by each PCA component
+
+
+    '''
+    cumulative_variance_ratio = np.cumsum(pca.explained_varianceratio)[:n_features]
+
+    # Create a bar plot of the cumulative variance ratio
+    plt.plot(range(1, n_features + 1), cumulative_variance_ratio)
+    plt.xlabel('Number of Principal Components')
+    plt.ylabel('Cumulative Variance Ratio')
+
+    # Show the plot
+    plt.show()
+
+def heatmap(df, n:int,target:str,columns:None):
+    '''
+    Heatmap which show us teh correlation of our numerical column of dataset with the target, where you can add specifics numbers 
+    
+    df -> must be the dataset we are working with
+    n -> number of columns we want to correlate with the target
+    target -> name of the column of the target, must be 'str'
+    columns -> must be all the columns we have in the dataset in previous step, in type object (df.columns)
+
+    Return:
+    Heatmap with YlOrBr colour and two decimals, only wiht n number of columns which correlate with our target
+    
+    '''
+
+    if columns is None:
+        columns = df.columns
+    
+    cols = df[columns].corr().nlargest(n,target)[target].index
+
+    cm = np.corrcoef(df[cols].values.T) 
+
+    plt.figure(figsize=(20,10))
+    hm = sns.heatmap(cm, cbar=True, annot=True, cmap='YlOrBr', fmt='.2f', yticklabels=cols.values, xticklabels=cols.values)
+    return hm
+
+def plot_roc_curve(y_true, y_pred, pos_label=1, figsize=(8, 8)):
+    '''
+    Function to plot the ROC curve of a binary classifier
+
+    Parameters:
+
+    y_true: true labels
+    y_pred: model predictions
+    pos_label: positive label (default: 1)
+    figsize: figure size (default: (8, 8))
+
+    Returns: 
+    Lineplot of the ROC curve
+    
+    '''
+    # Compute the false positive rate, true positive rate, and thresholds
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred, pos_label=pos_label)
+
+    # Compute the area under the curve (AUC)
+    roc_auc = auc(fpr, tpr)
+
+    # Create the ROC curve plot
+    plt.figure(figsize=figsize)
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (AUC = %0.2f)' % roc_auc)
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver operating characteristic (ROC) curve')
+    plt.legend(loc="lower right")
+    plt.show()
