@@ -39,6 +39,7 @@ def list_categorical_columns(df):
 
 
 
+
 def uniq_value(list_values:list):
     '''
     Function returning the unique values from a list.
@@ -49,11 +50,13 @@ def uniq_value(list_values:list):
     ----------
     unique: list of unique values
     '''
+
     unique = []
     for i in list_values:
         if i not in unique:
-            unique.extend(list_values)
-    return unique
+            unique.append(i)
+        return unique
+
 
 def last_columndf(df,feature):
     '''
@@ -253,7 +256,7 @@ def load_imgs(path, im_size:int):
                 filenames.append(file)
                 if file [-4:] == '.jpg' or file [-4:] == '.png':
                     # Read the image in color.
-                    image = imread(subdir + '\\' + file)
+                    image = imread(subdir + '/' + file)
                     # Resize the image.
                     smallimage = cv2.resize(image, (im_size, im_size)) 
                     # Save the images in the X variable.
@@ -386,7 +389,7 @@ class ImageDataGen(ImageDataGenerator):
         shuffle=True,
         sample_weight=None,
         seed=None,
-        save_to_dir='./aug',
+        save_to_dir=None,
         save_prefix='',
         save_format='png',
         ignore_class_split=False,

@@ -31,6 +31,9 @@ from sklearn.decomposition import PCA
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import scale
 
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
+
 
 
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
@@ -216,6 +219,7 @@ def load_model_zip(zip_file, model_file):
 
     return model
 
+
 def image_scrap(url, n:int):
 	'''
 	Function to scrap chrome images and get n images we want, and it create a new folder as 'my_images'.
@@ -280,7 +284,7 @@ def image_scrap(url, n:int):
 			image_content = requests.get(url).content
 			image_file = io.BytesIO(image_content)
 			image = Image.open(image_file)
-			file_path = download_path + file_name
+			file_path = download_path + '/' + file_name
 
 			with open(file_path, "wb") as f:
 				image.save(f, "JPEG")
@@ -730,3 +734,36 @@ def UnsupervisedDR(df, Acumulative_variance=0.85):
         columns = df.columns,
     ).set_index(df.index)
     return reconstruccion
+
+
+def lstm_model(input_shape, lstm_units, dense_units, output_shape):
+    """
+    Function of a standard LSTM type neural network model. 
+    The output layer has "sigmoid" activation so it is remixed in classification applications.
+    
+    Parameters
+    ----------
+        - input_shape: The input shape for the neural network. It is a tuple that specifies the shape of the input data (e.g., (timesteps, features)).
+        - lstm_units: The number of units in the LSTM layer.
+        - dense_units: The number of units in the dense layer.
+        - output_shape: The output shape for the neural network. It is a number that specifies the number of output classes or values (0,1).
+    Return
+    ------
+        - model
+    """
+    # Define the sequential model
+    model = Sequential()
+
+    # Add a LSTM layer with the specified number of units and the input form
+    model.add(LSTM(units=lstm_units, input_shape=input_shape))
+
+    # Add a dense layer with the specified number of units.
+    model.add(Dense(units=dense_units))
+
+    # Add an output layer with the specified shape
+    model.add(Dense(units=output_shape, activation='sigmoid'))
+
+    # Compile the model
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    return model
