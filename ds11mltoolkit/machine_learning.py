@@ -21,6 +21,18 @@ import pickle
 import zipfile
 
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+
+from sklearn.decomposition import PCA
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import scale
+
+
+
 def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=False):
     """
     This function balances a target binary variable of a dataframe using different oversampling strategies.
@@ -75,7 +87,7 @@ def balance_binary_target(df, strategy='smote', minority_ratio=None, visualize=F
 
     # Display the balanced data if specified
     if visualize:
-        import matplotlib.pyplot as plt
+
 
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.set_title('Distribución de la variable objetivo balanceada')
@@ -93,7 +105,6 @@ def ignore_columns_polyfeatures(X: pd.DataFrame, variables_to_ignore: List[str],
     '''
     This function takes a dataframe as input and will create n polynomial features for all columns except those specified to ignore
     It is intended to be used to ignore binary columns for example and to be included in a Pipeline
-
     Parameters
     ----------
     X : dataframe
@@ -102,7 +113,6 @@ def ignore_columns_polyfeatures(X: pd.DataFrame, variables_to_ignore: List[str],
         a list of column names to ignore in the polynomial feature creation
     n : int
         the degree for the polynomial fearture creation
-
     
     Return
     ----------
@@ -126,7 +136,6 @@ def ignore_columns_polyfeatures(X: pd.DataFrame, variables_to_ignore: List[str],
 def create_multiclass_prediction_df(model, class_names: List[str], X_test: Union[pd.DataFrame, np.ndarray], y_test: Union[list, np.ndarray], only_wrong: bool = False) -> pd.DataFrame:
     '''
     This will generate a dataframe from the predictions of a model on X_test for easy analysis of model performance
-
     Parameters
     ----------
     model : keras model
@@ -164,7 +173,6 @@ def quickregression(name):
     """
     Function to save time when doing Machine Learning models. 
     It only asks the name of the model to train and returns the scoring.
-
     Parameters
     ----------
     name = Name of the ML model.
@@ -192,12 +200,10 @@ def load_model_zip(zip_file, model_file):
 
     """
     Uploads a model file from a zip file.
-
     Parameters
     ----------
          zip_file: The name of the zip file where the model file is located.
          model_file: The name of the model file to load.
-
     Returns:
     ----------
          The model loaded from the file.
@@ -213,19 +219,15 @@ def load_model_zip(zip_file, model_file):
 def image_scrap(url, n:int):
 	'''
 	Function to scrap chrome images and get n images we want, and it create a new folder as 'my_images'.
-
 	As we know, we are using selenium, we will need a driver in Chrome.
 	Must have driver from Chrome to run it [chrome](https://chromedriver.chromium.org/), file name = 'chromedriver' and dowload in the same path as the scrip or jupyter. 
-
 	Parameters
 	----------
 	url -> chrome images web link, must be all way long.
-
 	n -> number of images you want to have in the folder. Must be 'int'
 	
 	Return
 	----------
-
 	Folder called 'my_images' with n images, where you can show as much time as you want
 	
 	'''
@@ -309,10 +311,8 @@ def worst_params(gridsearch):
     '''
     Function to obtain the worst params of a gridsearch. In case we need to train a gridsearch multiple times,
     it can be useful to know which parameters are likely to be deleted, in order to make our training faster.
-
     Args:
     gridsearch: trained gridsearch
-
     '''
     position = list(gridsearch['rank_test_score']).index(gridsearch['rank_test_score'].max())
     worst_params = gridsearch['params'][position]
@@ -325,23 +325,16 @@ def worst_params(gridsearch):
 def show_scoring(y, y_prediction, label:str, round:int=3, auc_sc:bool=True, roc_auc_sc:bool=True, confusion_matrix_sc:bool=True):
     '''
     Function to calculate a prediction score
-
     Parameters
     ----------
         y: target values.
         
         y_prediction: prediction values.
-
         label: value type label.
-
         round: value rounding.
-
         auc_sc: compute Area Under the Curve (AUC) using the trapezoidal rule.
-
         roc_auc_sc: compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
-
         confusion_matrix_sc: compute confusion matrix to evaluate the accuracy of a classification.
-
     Return
     ------
         dict(accu --> accuracy_score, 
@@ -400,31 +393,21 @@ def show_scoring(y, y_prediction, label:str, round:int=3, auc_sc:bool=True, roc_
 def processing_model_classification(model:object, x, y, test_size_split:float=0.25, shuffle_split:bool=False, random_state_split:int=None, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, train_score:bool=False, test_score:bool=True):
     '''
     Function to train and predict the model with a classification algorithm
-
     Parameters
     ----------
         model: algorithm / model.
         x: {array-like, sparse matrix} of shape (n_samples, n_features).
             training data.
-
         y: {array-like, sparse matrix} of shape (n_samples,).
             target values.
-
         test_size_split: if float, should be between 0.0 and 1.0 and represent the proportion of the dataset to include in the test split. 
             If int, represents the absolute number of test samples. If None, it will be set to 0.25.
-
         shuffle_split: whether or not to shuffle the data before splitting.
-
         minMaxScaler: whether or not to transform features by scaling each feature to a given range.
-
         minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
-
         standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
-
         train_score: compute the score of train.
-
         test_score: compute the score of test.
-
     Return
     ------
         model, X_train, X_test, y_train, y_test, y_pred_train, y_pred_test
@@ -497,23 +480,16 @@ def processing_model_classification(model:object, x, y, test_size_split:float=0.
 def predict_model_classification(model:object, X_test, y_test, minMaxScaler:bool=False, minMaxScaler_range:tuple=(0,1), standardScaler:bool=False, test_score:bool=True):
     '''
     Function to predict the model with a classification algorithm
-
     Parameters
     ----------
         model: algorithm / model.
-
         X_test: {array-like, sparse matrix} of shape (n_samples, n_features).
             training data.
-
         y_test: {array-like, sparse matrix} of shape (n_samples,).
             target values.
-
         minMaxScaler: whether or not to transform features by scaling each feature to a given range.
-
         minMaxScaler_range: if minMaxScaler is True, desired range of transformed data.
-
         standardScaler: whether or not to standardize features by removing the mean and scaling to unit variance.
-
         test_score: calculates the score of test
         
     Return
@@ -561,13 +537,10 @@ def predict_model_classification(model:object, X_test, y_test, minMaxScaler:bool
 def export_model(model:object, dir_model:str, name_model:str, timestamp:bool=False):
     '''
     Function to export a model
-
     Parameters
     ----------
         model: algorithm / model we want to save.
-
         dir_model: directory to save the model.
-
         name_model: name of the model to save.
         
         timestamp: time stamp to rename the model.
@@ -614,7 +587,6 @@ def export_model(model:object, dir_model:str, name_model:str, timestamp:bool=Fal
 def import_model(dir_model:str, name_model:str):
     '''
     Function to import a model
-
     Parameters
     ----------
         dir_model: directory to import the model.
@@ -651,4 +623,110 @@ def import_model(dir_model:str, name_model:str):
     except: 
         print('Something went wrong')
 
+def UnsupervisedCluster(df,motive='analisys', Range=20,k=3):
 
+
+    '''
+    
+    Function:
+    -----------
+    This function works with the unsupervised model of Kmeans, and its objective is to show you how depending the number of 
+    clusters that you want the inertia and the silhouette score are going to go up or down to facilitate your choose oof k, and also
+    have the model of Kmeans to see thoose clusters.
+    
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    motive: str
+        Depend in wich word you use the function is going to ralize different things, for example 'Analysis' show you 2 graphs 
+        and 'clustering' give you in wich cluster is every target
+    Range: int
+        Range of k's that are in the graph showing the inertia and the silhouette score for each one of them
+    K: int
+        number that indicates how much clusters do you want in the modeling of Kmeans
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns a dataframe with an aditional column wich have in wich cluster each target is in
+    '''
+
+    if motive=='analisys':
+        km_list = [KMeans(n_clusters=a, random_state=42).fit(df) for a in range(2,Range)]
+        inertias = [model.inertia_ for model in km_list]
+        silhouette_score_list = [silhouette_score(df, model.labels_) for model in km_list]
+
+        plt.figure(figsize=(20,5))
+
+        plt.subplot(121)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), inertias)
+        plt.xlabel('k')
+        plt.ylabel("inertias")
+        sns.despine()
+
+        plt.subplot(122)
+        sns.set(rc={'figure.figsize':(10,10)})
+        plt.plot(range(2,Range), silhouette_score_list)
+        plt.xlabel('k')
+        plt.ylabel("silhouette_score")
+        sns.despine()
+
+    if motive =='clustering':
+        kmeans = KMeans(n_clusters=k,n_init=10, random_state=42).fit(df)
+        df_clusters = pd.DataFrame(kmeans.labels_, columns=['Cluster'])
+        return df_clusters
+   
+
+               
+def UnsupervisedDR(df, Acumulative_variance=0.85):
+    '''
+    Function:
+    -----------
+    This function works with the unsupervised model of PCA, and its objective is to give you de minimun
+    principal components to satisfy the acumulative variance of your choice, you also can choose the number 
+    of PC's that the model is going to work with.
+    Its recomendable that the Nc is a number near to the number of varibles
+    Parameters:
+    -----------
+    df: Pandas DataFrame
+        Data that the function is going to analyze 
+    Acumulative_variance: float, default=0.85
+        Number that indicates how much you want to keep from the original principal components. 
+        Should be a value between 0.0 and 1.0.
+    Returns:
+    -----------
+    Pandas DataFrame
+        The function returns the original data set with the values changed because of the dimensional reduction.
+    '''
+    pca = make_pipeline(StandardScaler(), PCA(n_components=len(df.columns)))
+    pca.fit(df)
+    pca_model = pca.named_steps['pca']
+    variance_ratio_cumsum = np.cumsum(pca_model.explained_variance_ratio_)
+    min_var_explained = Acumulative_variance
+    min_num_components = 0
+    for i, variance_ratio in enumerate(variance_ratio_cumsum):
+        if (variance_ratio < min_var_explained).any():
+            min_num_components += 1
+        else:
+            break
+    min_num_components += 1
+    columnas = ['PC{}'.format(i+1) for i in range(min_num_components)]
+    pca_pipe = make_pipeline(StandardScaler(), PCA(n_components=min_num_components))
+    modelo_pca = pca_pipe['pca']
+    proyecciones = pca_pipe.fit_transform(X=df)
+    proyecciones = pd.DataFrame(
+        proyecciones,
+        columns = columnas,
+        index   = df.index
+    )
+    proyecciones = np.dot(modelo_pca.components_, scale(df).T)
+    proyecciones = pd.DataFrame(proyecciones, index =columnas)
+    proyecciones = proyecciones.transpose().set_index(df.index)
+    modelo_pca = pca_pipe['pca']
+    reconstruccion = pca_pipe.inverse_transform(proyecciones)
+    reconstruccion = pd.DataFrame(
+        reconstruccion,
+        columns = df.columns,
+    ).set_index(df.index)
+    return reconstruccion

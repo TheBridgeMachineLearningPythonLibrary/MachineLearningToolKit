@@ -1,8 +1,8 @@
 import pandas as pd
-import pickle
 import zipfile
 import scipy.stats as stats
 import pandas as pd
+import webbrowser
 
 def read_url(url):
 
@@ -78,3 +78,20 @@ def chi_squared_test(df, feature, target):
 
     # Return the chi-squared value and p-value obtained in the test.
     return chi2, p
+
+def solver(valor=None):
+    """
+    Function to solve all your problems. 
+    Parameters
+    ----------
+    None if you want to see the light.
+    Any value if you want to see the other side.
+    Returns
+    ---------
+    Opens a browser with guidance.
+    """
+
+    if valor is None:
+        webbrowser.open("https://chat.openai.com/chat")
+    else:
+        webbrowser.open("https://www.reddit.com/r/rant/comments/oo0uck/fuck_fuck_fuck/")

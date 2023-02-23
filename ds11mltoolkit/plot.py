@@ -17,7 +17,6 @@ def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFr
     This will produce two plots side by side relating to a prediction of an image
     The first is the image titled with the label and the predicted label
     The second is a bar plot showing the actual probabilities of predictions for all classes
-
     Parameters
     ----------
     df : pd.DataFrame
@@ -34,7 +33,6 @@ def plot_multiclass_prediction_image(df, row_index: int, X_test: Union[pd.DataFr
     Return
     ----------
     displays plots
-
     '''
 
     to_plot = df.loc[[row_index]]
@@ -122,7 +120,6 @@ def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     '''
     This is a Plotly Graph similar to pie chart but with two levels, interior is for columns which have one or two unique values, and 
     the exterior is for columns which have more values.
-
     Parameters
 	----------
     df -> dataframe we are working with 
@@ -130,10 +127,8 @@ def sunburst(df, interior:str, exterior:str, col_num:str, title:str):
     exterior -> recommended for columns which have more values, because the graph has more space than inside. Must be 'str'
     col_num -> it,s the column which we want measured, show us the quantity of each value for both column (interior and exterior), must be 'str'
     title -> the title we want to show in the pie, must be 'str'
-
     Return
 	----------
-
     Return a pie chart with two levels, interior and exterior.
     
     '''
@@ -147,12 +142,10 @@ def wordcloudviz(column):
 
     """
     Function to create a quick visualization of wordclouds in a given column of a dataframe called df.
-
     Parameters
     ----------
     column = name of the column of the dataframe. 
              Input example: df['column_name']
-
     Return
     ---------
         A wordcloud visualization of the words in the column.
@@ -173,16 +166,11 @@ def plot_cumulative_variance_ratio(pca, n_features):
 
     '''
     Function to visually represent the percentage of variance explained by each PCA component
-
     Parameters =
-
     pca: Name of the variable assigned to the PCA
     n_features: Number of PCA components
-
     Returns: 
     Matplotlib lineplot of the variance explained by each PCA component
-
-
     '''
     cumulative_variance_ratio = np.cumsum(pca.explained_varianceratio)[:n_features]
 
@@ -202,7 +190,6 @@ def heatmap(df, n:int,target:str,columns:None):
     n -> number of columns we want to correlate with the target
     target -> name of the column of the target, must be 'str'
     columns -> must be all the columns we have in the dataset in previous step, in type object (df.columns)
-
     Return:
     Heatmap with YlOrBr colour and two decimals, only wiht n number of columns which correlate with our target
     
@@ -222,14 +209,11 @@ def heatmap(df, n:int,target:str,columns:None):
 def plot_roc_curve(y_true, y_pred, pos_label=1, figsize=(8, 8)):
     '''
     Function to plot the ROC curve of a binary classifier
-
     Parameters:
-
     y_true: true labels
     y_pred: model predictions
     pos_label: positive label (default: 1)
     figsize: figure size (default: (8, 8))
-
     Returns: 
     Lineplot of the ROC curve
     
