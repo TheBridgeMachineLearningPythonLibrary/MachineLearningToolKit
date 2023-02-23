@@ -1,0 +1,40 @@
+Metadata-Version: 2.1
+Name: ds11mltoolkit
+Version: 1.7
+Summary: Helper functions for all stages of the machine learning model building process
+Home-page: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit
+Download-URL: https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_1_7.tar.gz
+Author: TheBridgeMachineLearningPythonLibrary
+Author-email: seenstevol@protonmail.com
+License: MIT
+Keywords: machine learning,data visualization,data processing,sklearn,pandas
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+
+# MachineLearningToolKit
+Helper functions for all stages of the machine learning cycle.
+
+# List of functions and methods
+
+## Data collection, loading and pre-processing
+
+
+## Data visualisation and exploration
+
+
+## Machine Learning Models
+
+
+## Model Productizing
+
+
+
+#### Contributors
+
