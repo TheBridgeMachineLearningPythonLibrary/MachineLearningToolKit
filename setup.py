@@ -2,12 +2,14 @@ from distutils.core import setup
 
 from pathlib import Path
 this_directory = Path(__file__).parent
-long_description = (this_directory / "README.md").read_text()
+#long_description = (this_directory / "README.md").read_text()
+with open(this_directory / "README.md", encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
   name = 'ds11mltoolkit',
   packages = ['ds11mltoolkit'],
-  version = '1.8',
+  version = '1.9',
   license = 'MIT',
   description = 'Helper functions for all stages of the machine learning model building process',
   long_description = long_description,
@@ -15,7 +17,7 @@ setup(
   author = 'TheBridgeMachineLearningPythonLibrary',
   author_email = 'seenstevol@protonmail.com',
   url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit',
-  download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_1_8.tar.gz',
+  download_url = 'https://github.com/TheBridgeMachineLearningPythonLibrary/MachineLearningToolKit/archive/refs/tags/v_1_9.tar.gz',
   keywords = ['machine learning', 'data visualization', 'data processing', 'sklearn', 'pandas'],
   install_requires=['pandas',
                     'scipy',
