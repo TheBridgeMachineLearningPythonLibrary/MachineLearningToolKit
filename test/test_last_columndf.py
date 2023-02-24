@@ -13,8 +13,7 @@ import pytest
 
 
 
-
-def test_data():
+def test_last_columndf():
 
     df = pd.DataFrame({'a':['1','2','3','4'], 
                    'b': [16,7,6,16],
@@ -24,16 +23,13 @@ def test_data():
                    'f':[1,11,23,66]})
     list_features=df.columns.to_list()
     feature=list_features[0]
-    return df,feature
 
-
-def test_last_columndf(test_data):
-    df,feature=test_data()
     df=last_columndf(df,feature)
     list_features=df.columns.to_list()
     feature=list_features[-1]
 
     assert feature == 'a'
+
 
 
 
